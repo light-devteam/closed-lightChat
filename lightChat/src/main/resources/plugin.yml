@@ -1,5 +1,0 @@
-name: LightChat
-version: '${project.version}'
-main: tire.lightchat.LightChat
-api-version: 1.15
-softdepend: [ Vault ]
