@@ -1,0 +1,91 @@
+# {senderPrefix}, {sender}, {senderSuffix}, {message}
+globalChat:
+  # true, else - false
+  enable: 'true'
+  prefix: '!'
+  format: '&f&6G&f | &6{senderPrefix} {sender}&6 > {message}'
+  messageColor: '&f'
+  # true, else - false
+  ping: 'true'
+# {senderPrefix}, {sender}, {senderSuffix}, {message}
+localChat:
+  chatDistantion: '99.9'
+  # true, else - false
+  enable: 'true'
+  prefix: ''
+  format: '&bL | &6{sender}&b > {message}'
+  messageColor: '&f'
+  # true, else - false
+  ping: 'true'
+# {senderPrefix}, {sender}, {senderSuffix}, {message}
+worldChat:
+  # true, else - false
+  enable: 'true'
+  prefix: '*'
+  format: '&f&6W&f | &6{sender}&6 > {message}'
+  messageColor: '&f'
+  # true, else - false
+  ping: 'true'
+
+# {senderPrefix}, {sender}, {senderSuffix}, {message}, {globalChatPrefix}, {localChatPrefix}, {worldChatPrefix}
+prefixError: 'Ваше сообщение не было отправлено т.к. чат с соответствующим префиксом не был найден. Доступные префиксы: "{globalChatPrefix}" - Глобальный чат, "{localChatPrefix}" - Локальный чат, "{worldChatPrefix}" - Чат измерения.'
+
+ping:
+  # {mentioned}
+  inFormat: '@{mentioned}'
+  # {mentionedPrefix}, {mentioned}, {mentionedSuffix}
+  outFormat: '{mentioned}'
+  # {senderPrefix}, {sender}, {senderSuffix}
+  message: '&6Вас упомянули в чате!'
+  myself: '&6Зачем упоминать себя?..'
+  sound:
+    # empty equals 'off'
+    sound: 'BLOCK_BUBBLE_COLUMN_BUBBLE_POP'
+    volume: '10'
+    pitch: '1'
+  marker:
+    enable: 'true'
+    markerColor: '&a'
+    # mentioned, else - all
+    visibility: 'mentioned'
+
+private:
+  commands: 'w, we, wh, whisper, t, tell, m, msg, message, mur, murmur, p, pr, private'
+  # {sender}, {recipientPrefix}, {recipient}, {recipientSuffix}, {message}
+  senderFormat: '&6P | &fВы &6» &f{recipient} &6> &f{message}'
+  # {senderPrefix}, {sender}, {senderSuffix}, {recipient}, {message}
+  recipientFormat: '&6P | &f{sender} &6» &fВы &6> &f{message}'
+  myself: '&6Вы серьёзно хотите отправить сообщение себе?'
+  # {recipient}
+  error: '&6Не удалось отправить сообщение для {recipient}. Возможно, он не в сети или никогда не заходил на сервер.'
+  noPerms: '&cУ вас нет прав на отправку личных сообщений!'
+  sound:
+    recipientSound: 'ENTITY_EXPERIENCE_ORB_PICKUP'
+    senderSound: 'ENTITY_EXPERIENCE_ORB_PICKUP'
+    volume: '10'
+    pitch: '1'
+    # {senderPrefix}, {sender}, {senderSuffix}
+    message: '&6Вам пришло личное сообщение от {sender}!'
+
+messages:
+  join:
+    format: '[+] {message}'
+    # {playerPrefix}, {player}, {playerSuffix}
+    first:
+      - '{player} first time joined the server!'
+      - '{player} is new with us!'
+    main:
+      - 'Hello, {playerPrefix} {player}!'
+      - '{player} with us!'
+  quit:
+    format: '[-] {message}'
+    main:
+      - '{player} leave'
+      - '{player} quit'
+
+reload:
+  # {sender}
+  success: '&aКонфиг был успешно перезагружен.'
+  # {sender}
+  noPerms: '&cУ вас недостаточно прав для использования данной команды!'
+  error: '&cВо время перезагрузки конфига произошла непредвиденная ошибка.'
