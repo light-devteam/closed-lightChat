@@ -17,7 +17,7 @@ Simple, convenient and functional minecraft chat.
 
 ## Placeholders
 *Some of the lines have comments (`# comment`) above them indicating supported placeholders or other notes and possible values.*  
-*They will also be described [below](https://github.com/rTiRe/lightChat/edit/main/README.md#config-setup).*
+*They will also be described [below](https://github.com/rTiRe/lightChat/blob/main/README.md#config-setup).*
 
 ## Config setup
 ### globalChat, localChat, worldChat:
