@@ -1,11 +1,11 @@
 # lightChat - Simple, convenient and functional minecraft chat.
 # Functional:
-**`[1]`** Global Chat  
-**`[2]`** Local Chat  
-**`[3]`** World Chat  
-**`[4]`** Private Chat  
-**`[5]`** Player Mentions  
-**`[6]`** Custom join and quit messages
+**[`[1]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** Global Chat  
+**[`[2]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** Local Chat  
+**[`[3]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** World Chat  
+**[`[4]`](https://github.com/rTiRe/lightChat/blob/main/README.md#private)** Private Chat  
+**[`[5]`](https://github.com/rTiRe/lightChat/blob/main/README.md#ping)** Player Mentions  
+**[`[6]`](https://github.com/rTiRe/lightChat/blob/main/README.md#messages)** Custom join and quit messages
 
 **`Global Chat`** - Messages are visible to all players on the server.  
 **`Local Chat`** - Messages are visible to all players within a specified number of blocks from the message sender.  
@@ -14,7 +14,7 @@
 **`Player Mentions`** - Highlighting the nickname of the mentioned player in the chat (only for him // for everyone), accompanied by a sound notification and text above the hot bar for the mentioned player.  
 **`Custom ... messages`** - Customizable player join and quit messages.  
 
-# Placeholders
+# Placeholders and Text formatting
 *Some of the lines have comments (`# comment`) above them indicating supported placeholders or other notes and possible values.*  
 |        Placeholder       |Description                                                                                  |
 |:------------------------:|---------------------------------------------------------------------------------------------|
@@ -36,20 +36,22 @@
 | **`{worldChatPrefix}`**  | World chat anchor symbol.                                                                   |
 
 
-*They will also be described [below](https://github.com/rTiRe/lightChat/blob/main/README.md#config-setup).*
+*They will also be described [below](https://github.com/rTiRe/lightChat/blob/main/README.md#config-setup).*  
+<br>
+In config **`&`** is replaced by **`§`**. Text can be [formatted](https://github.com/rTiRe/lightChat/blob/main/README.md#useful-links) in the same way as regular text in minecraft.
 
 # Config setup
 ## globalChat, localChat, worldChat:
 
-|        String        |Description                                                                                                                                                                  |Placeholders                                                                                                                                                                                                               |
-|:--------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **`enable`**         | Sets the chat mode. `true` - enabled, `any other` - disabled.                                                                                                               |                                                                                                                                                                                                                           |
-| **`prefix`**         | Anchor symbol that determines the chat in which the player writes.                                                                                                          |                                                                                                                                                                                                                           |
-| **`format`**         | General view of the message with placeholders.                                                                                                                              | <ul><li>**`{sender}`**</li> <li>**`{senderPrefix}`**</li> <li>**`{senderSuffix}`**</li> <li>**`{message}`**</li></ul>                                                                                                     |
-| **`messageColor`**   | Message color.                                                                                                                                                              |                                                                                                                                                                                                                           |
-| **`ping`**           | Sets whether player mentions are enabled in this chat. `true` - enabled, `any other` - disabled.                                                                            |                                                                                                                                                                                                                           |
-| **`chatDistantion`** | The radius of the circle centered at the position of the player who sent the message, inside which the players will see the message sent to them. **Only for `localChat`.** |                                                                                                                                                                                                                           |
-| **`prefixError`**    | Error text with placeholders that the player will see if they enter a non-existent prefix.                                                                                  | <ul><li>**`{sender}`**</li> <li>**`{senderPrefix}`**</li> <li>**`{senderSuffix}`**</li> <li>**`{message}`**</li> <li>**`{globalChatPrefix}`**</li> <li>**`{localChatPrefix}`**</li> <li>**`{worldChatPrefix}`**</li></ul> |
+|        String        |Description                                                                                                                                                                      |Placeholders                                                                                                                                                                                                               |
+|:--------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **`enable`**         | Sets the chat mode. `true` - enabled, `any other` - disabled.                                                                                                                   |                                                                                                                                                                                                                           |
+| **`prefix`**         | Anchor symbol that determines the chat in which the player writes.                                                                                                              |                                                                                                                                                                                                                           |
+| **`format`**         | General view of the message with placeholders.                                                                                                                                  | <ul><li>**`{sender}`**</li> <li>**`{senderPrefix}`**</li> <li>**`{senderSuffix}`**</li> <li>**`{message}`**</li></ul>                                                                                                     |
+| **`messageColor`**   | Message color.                                                                                                                                                                  |                                                                                                                                                                                                                           |
+| **`ping`**           | Sets whether player mentions are enabled in this chat. `true` - enabled, `any other` - disabled.                                                                                |                                                                                                                                                                                                                           |
+| **`chatDistantion`** | The radius of the circle centered at the position of the player who sent the message, inside which the players will see the message sent to them. <br>**Only for `localChat`.** |                                                                                                                                                                                                                           |
+| **`prefixError`**    | Error text with placeholders that the player will see if they enter a non-existent prefix.                                                                                      | <ul><li>**`{sender}`**</li> <li>**`{senderPrefix}`**</li> <li>**`{senderSuffix}`**</li> <li>**`{message}`**</li> <li>**`{globalChatPrefix}`**</li> <li>**`{localChatPrefix}`**</li> <li>**`{worldChatPrefix}`**</li></ul> |
 
 
 ## Ping:
@@ -58,10 +60,10 @@
 |:------------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 | **`inFormat`**     | Mention input format. Mention will be determined by it.                                                                                                                                                                                                                                                                                              | **Must contain `{mentioned}` placeholder.**                                                           |
 | **`outFormat`**    | The output format of the mention with placeholders that will be displayed in the message instead of the input format.                                                                                                                                                                                                                                | <ul><li>**`{mentioned}`**</li> <li>**`{mentionedPrefix}`**</li> <li>**`{mentionedSuffix}`**</li></ul> |
-| **`marker`**       | A special mention format for the mentioned player. **Leave blank to disable.**                                                                                                                                                                                                                                                                       | <ul><li>**`{mentioned}`**</li> <li>**`{mentionedPrefix}`**</li> <li>**`{mentionedSuffix}`**</li></ul> |
-| **`message`**      | The message that the mentioned player will see above the hotbar if he is mentioned. **Leave blank to disable.**                                                                                                                                                                                                                                      |                                                                                                       |
-| **`myself`**       | The message the player will see if they try to mention themselves. **Leave blank to disable.**                                                                                                                                                                                                                                                       |                                                                                                       |
-| **`sound.sound`**  | The [sound](https://github.com/rTiRe/lightChat/blob/main/README.md#useful-links) the player will hear if mentioned. **Leave blank to turn off audio playback.**                                                                                                                                                                                      |                                                                                                       |
+| **`marker`**       | A special mention format for the mentioned player. <br>**Leave blank to disable.**                                                                                                                                                                                                                                                                   | <ul><li>**`{mentioned}`**</li> <li>**`{mentionedPrefix}`**</li> <li>**`{mentionedSuffix}`**</li></ul> |
+| **`message`**      | The message that the mentioned player will see above the hotbar if he is mentioned. <br>**Leave blank to disable.**                                                                                                                                                                                                                                  |                                                                                                       |
+| **`myself`**       | The message the player will see if they try to mention themselves. <br>**Leave blank to disable.**                                                                                                                                                                                                                                                   |                                                                                                       |
+| **`sound.sound`**  | The [sound](https://github.com/rTiRe/lightChat/blob/main/README.md#useful-links) the player will hear if mentioned. <br>**Leave blank to turn off audio playback.**                                                                                                                                                                                  |                                                                                                       |
 | **`sound.volume`** | The volume of the corresponding sound. The maximum value is `1`, but more is possible. It will be heard the same at the playback point, but the more, the better it will be heard at a greater distance from the playback point. For example: `1` - weakly audible at a distance of 15 blocks, `10` - well audible even at a distance of 150 blocks. |                                                                                                       |
 | **`sound.pitch`**  | Audio playback speed. `1` - normal. **Less** is slower, **more** is faster.                                                                                                                                                                                                                                                                          |                                                                                                       |
 
@@ -97,23 +99,31 @@ Of all the entries, a random one will be chosen.
   
 |        String       |Description                                                                                                                                                                                                       |Placeholders                                                                                 |
 |:-------------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| **`join.format`**   | The format of the join message. **Leave blank to disable.**                                                                                                                                                      | <ul><li>**`{message}`** - Server login message.</li></ul>                                   |
+| **`join.format`**   | The format of the join message. <br>**Leave blank to disable.**                                                                                                                                                  | <ul><li>**`{message}`** - Server login message.</li></ul>                                   |
 | **`join.first`**    | Message when a player first joins the server. :arrow_up_down:                                                                                                                                                    | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 | **`join.main`**     | Message when a player joins the server. :arrow_up_down:                                                                                                                                                          | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 | **`join.nickname`** | Where `nickname` is the nickname of the entered player. One of these messages will be displayed when a player with the nickname `nickname` logs in. There can be any number of such structures. :arrow_up_down:  | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
-| **`quit.format`**   | The format of the quit message. **Leave blank to disable.**                                                                                                                                                      | <ul><li>**`{message}`** - Server login message.</li></ul>                                   |
+| **`quit.format`**   | The format of the quit message. <br>**Leave blank to disable.**                                                                                                                                                  | <ul><li>**`{message}`** - Server login message.</li></ul>                                   |
 | **`quit.main`**     | Message when a player quits the server. :arrow_up_down:                                                                                                                                                          | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 | **`quit.nickname`** | Where `nickname` is the nickname of the entered player. One of these messages will be displayed when a player with the nickname `nickname` logs out. There can be any number of such structures. :arrow_up_down: | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 
 ## Reload
-|String|Description|Placeholders|
-|:----:|-----------|------------|
-| **`success`** |  |  |
-| **`noPerms`** |  |  |
-| **`error`** |  |  |
+|     String    |Description                                                                                                                                                                                                   |Placeholders                      |
+|:-------------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|
+| **`success`** | The message that the sender of the command will see when the config is successfully reloaded. <br>**Leave blank to disable.**                                                                                | <ul><li>**`{sender}`**</li></ul> |
+| **`noPerms`** | The message that the sender of the command will see if they do not have [permission to use the command](https://github.com/rTiRe/lightChat/blob/main/README.md#permissions). <br>**Leave blank to disable.** | <ul><li>**`{sender}`**</li></ul> |
+| **`error`**   | The message that the sender of the command will see if an error occurs while reloading the config. <br>**Leave blank to disable.**                                                                           |                                  |
 
-## Permissions
+# Preset Commands
+|        Command        |Aliases                 |Description                                                                                  |
+|:---------------------:|------------------------|---------------------------------------------------------------------------------------------|
+| `/lightchat <reload>` | `lc`, `lightc`, `lchat`| Plugin configuration command. <br><br>Arguments: <ul><li>**`reload`** - config reload</li></ul> |
+
+
+# Permissions
 + **`lc.private`** - Gives the owner the right to send private messages. 
++ **`lc.reload`** - Gives the right to reload the config.
 
-## Useful links
-+ **[Names of all sounds in the game](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html).**
+# Useful links
++ **[Names of all sounds in the game](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html).**  
++ **[Text formatting in Minecraft](https://minecraft.fandom.com/wiki/Formatting_codes).**
