@@ -13,7 +13,9 @@
 **`Private Chat`** - Personal correspondence of two players.  
 **`Player Mentions`** - Highlighting the nickname of the mentioned player in the chat (only for him // for everyone), accompanied by a sound notification and text above the hot bar for the mentioned player.  
 **`Custom ... messages`** - Customizable player join and quit messages.  
-
+# Requirements
++ **`SpigotMC 1.18.1`** - Kernel.  
++ **`Vault`** (optional) - Plugin.
 # Placeholders and Text formatting
 *Some of the lines have comments (`# comment`) above them indicating supported placeholders or other notes and possible values.*  
 |        Placeholder       |Description                                                                                  |
