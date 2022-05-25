@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import tire.lightchat.errorfinder.FatalErrors;
 import tire.lightchat.main.LightChat;
+import tire.lightchat.modules.ReplaceMethods;
 
 public class ReloadConfig {
     private LightChat plugin;
@@ -13,9 +14,15 @@ public class ReloadConfig {
     }
 
     public void reload(CommandSender sender) {
-        String success = plugin.getConfig().getString("reload.success").replace("&", "\u00a7").replace("{sender}", ((Player)sender).getName());
-        String noPerms = plugin.getConfig().getString("reload.noPerms").replace("&", "\u00a7").replace("{sender}", ((Player)sender).getName());
-        String error = plugin.getConfig().getString("reload.error").replace("&", "\u00a7");
+
+        ReplaceMethods ReplaceMethods = new ReplaceMethods(plugin);
+
+        String success = plugin.getConfig().getString("reload.success");
+            success = ReplaceMethods.player(success, (Player)sender, "sender");
+        String noPerms = plugin.getConfig().getString("reload.noPerms");
+            noPerms = ReplaceMethods.player(noPerms, (Player)sender, "sender");
+        String error = plugin.getConfig().getString("reload.error");
+            error = ReplaceMethods.unicode(error);
 
         if(sender.hasPermission("lchat.reload")) {
             try {

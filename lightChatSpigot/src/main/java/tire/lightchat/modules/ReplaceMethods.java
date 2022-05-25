@@ -13,28 +13,37 @@ public class ReplaceMethods {
     }
 
     public String unicode(String str) {
-        return str.replace("&", "\u00a7");
+        String placeholder = plugin.getConfig().getString("config.placeholder");
+        String formatSymbol = plugin.getConfig().getString("config.formatSymbol");
+        return str.replace(formatSymbol, "\u00a7");
     }
     public String message(String str, String Message) {
-        return str.replace("{message}", Message);
+        String placeholder = plugin.getConfig().getString("config.placeholder");
+        String formatSymbol = plugin.getConfig().getString("config.formatSymbol");
+        str = unicode(str);
+        return str.replace(placeholder.replace("placeholder", "message"), Message);
     }
     public String message(String str, String Message, String Color) {
-        return str.replace("{message}", unicode(Color) + Message);
+        String placeholder = plugin.getConfig().getString("config.placeholder");
+        String formatSymbol = plugin.getConfig().getString("config.formatSymbol");
+        return str.replace(placeholder.replace("placeholder", "message"), unicode(Color) + Message);
     }
     public String player(String str, Player p, String r) {
+        String placeholder = plugin.getConfig().getString("config.placeholder");
+        String formatSymbol = plugin.getConfig().getString("config.formatSymbol");
+        str = unicode(str);
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            str = str.replace("{" + r + "Prefix}", this.plugin.chat.getPlayerPrefix(p)).replace("{" + r + "Suffix}", this.plugin.chat.getPlayerSuffix(p));
+            str = str.replace(placeholder.replace("placeholder", r + "Prefix"), this.plugin.chat.getPlayerPrefix(p)).replace(placeholder.replace("placeholder", r + "Suffix"), this.plugin.chat.getPlayerSuffix(p));
         }
-        return str.replace("{" + r + "}", p.getName());
-    }
-    public String recipient(String str, String Recipient) {
-        return str.replace("{recipient}", Recipient);
-    }
-    public String mention(String str, String Mentioned) {
-        return str.replace("{mentioned}", Mentioned);
+        return str.replace(placeholder.replace("placeholder", r), p.getName());
     }
 
     public String prefixes(String str) {
-        return str.replace("{globalChatPrefix}", plugin.getConfig().getString("globalChat.prefix")).replace("{localChatPrefix}", plugin.getConfig().getString("localChat.prefix")).replace("{worldChatPrefix}", plugin.getConfig().getString("worldChat.prefix"));
+        String placeholder = plugin.getConfig().getString("config.placeholder");
+        String formatSymbol = plugin.getConfig().getString("config.formatSymbol");
+        str = unicode(str);
+        return str.replace(placeholder.replace("placeholder", "globalChatPrefix"), plugin.getConfig().getString("chats.globalChat.prefix"))
+                .replace(placeholder.replace("placeholder", "localChatPrefix"), plugin.getConfig().getString("chats.localChat.prefix"))
+                .replace(placeholder.replace("placeholder", "worldChatPrefix"), plugin.getConfig().getString("chats.worldChat.prefix"));
     }
 }

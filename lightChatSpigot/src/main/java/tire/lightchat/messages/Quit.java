@@ -18,7 +18,9 @@ public class Quit {
     }
 
     public void quit(PlayerQuitEvent e) {
-        e.setQuitMessage(null);
+        if((plugin.getConfig().getString("messages.quit.format").trim()).length() != 0) {
+            e.setQuitMessage(null);
+        }
 
         Player Player = e.getPlayer();
         String Name = Player.getName();
@@ -30,9 +32,8 @@ public class Quit {
             messages = plugin.getConfig().getStringList("messages.quit.main");
         }
 
-        String msg = plugin.getConfig().getString("messages.join.format")
-                .replace("{message}", messages.get(Random.rnd(0, messages.size() - 1)))
-                .replace("&", "\u00a7");
+        String msg = plugin.getConfig().getString("messages.quit.format");
+            msg = new ReplaceMethods(plugin).message(msg, new ReplaceMethods(plugin).unicode(messages.get(Random.rnd(0, messages.size() - 1))));
             msg = new ReplaceMethods(plugin).player(msg, Player, "player");
 
         Bukkit.broadcastMessage(msg);

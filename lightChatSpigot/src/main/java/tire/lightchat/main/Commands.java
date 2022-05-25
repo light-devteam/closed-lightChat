@@ -16,7 +16,8 @@ public class Commands implements CommandExecutor  {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("lightchat")) {
             if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                new ReloadConfig(plugin).reload(sender);
+                ReloadConfig ReloadConfig = new ReloadConfig(plugin);
+                ReloadConfig.reload(sender);
                 return true;
             }
         }

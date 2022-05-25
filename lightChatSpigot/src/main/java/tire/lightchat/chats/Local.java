@@ -17,31 +17,39 @@ public class Local {
 
         ReplaceMethods ReplaceMethods = new ReplaceMethods(plugin);
 
-        String messageColor = plugin.getConfig().getString("localChat.messageColor").replace("&", "\u00a7");
-        String ping = plugin.getConfig().getString("localChat.ping");
-        String dist = plugin.getConfig().getString("localChat.chatDistantion");
-        float distantion = Float.parseFloat(dist.trim());
+        String messageColor = plugin.getConfig().getString("chats.localChat.messageColor");
+            messageColor = ReplaceMethods.unicode(messageColor);
+        String noPerms = plugin.getConfig().getString("chats.localChat.noPerms");
+            noPerms = ReplaceMethods.unicode(noPerms);
+        String format = plugin.getConfig().getString("chats.localChat.format");
+            format = ReplaceMethods.player(format, e.getPlayer(), "sender");
 
-        String format = plugin.getConfig().getString("localChat.format").replace("&", "\u00a7");
-        format = ReplaceMethods.player(format, e.getPlayer(), "sender");
+        String ping = plugin.getConfig().getString("chats.localChat.ping");
 
-        if(ping.equalsIgnoreCase("true")) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (e.getPlayer().getWorld().equals(p.getWorld()) && p.getLocation().distance(e.getPlayer().getLocation()) <= distantion) {
-                    p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+        float distantion = Float.parseFloat(plugin.getConfig().getString("chats.localChat.chatDistantion").trim());
+
+        if(e.getPlayer().hasPermission("lc.chat.Local.write")) {
+            if (ping.equalsIgnoreCase("true") && e.getPlayer().hasPermission("lc.chat.Local.mention")) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (p.hasPermission("lc.chat.Local.see")) {
+                        if (e.getPlayer().getWorld().equals(p.getWorld()) && p.getLocation().distance(e.getPlayer().getLocation()) <= distantion) {
+                            p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+                        }
+                    }
+                }
+            } else {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (p.hasPermission("lc.chat.Local.see")) {
+                        if (e.getPlayer().getWorld().equals(p.getWorld()) && p.getLocation().distance(e.getPlayer().getLocation()) <= distantion) {
+                            p.sendMessage(ReplaceMethods.message(format, Message, messageColor));
+                        }
+                    }
                 }
             }
-        }
-        else {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (e.getPlayer().getWorld().equals(p.getWorld()) && p.getLocation().distance(e.getPlayer().getLocation()) <= distantion) {
-                    p.sendMessage(format);
-                }
+        } else {
+            if (noPerms.length() != 0) {
+                e.getPlayer().sendMessage(noPerms);
             }
         }
-
-        //String msgPrefix = plugin.getConfig().getString("localChat.msgPrefix");
-        //msgPrefix = replaceVarsNUnicode.customReplace(msgPrefix, e.getPlayer().getName(), "", "", "", "");
-        //e.setFormat(msgPrefix + Message);
     }
 }

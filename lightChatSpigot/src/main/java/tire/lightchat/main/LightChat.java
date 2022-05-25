@@ -28,8 +28,6 @@ public final class LightChat extends JavaPlugin {
             getConfig().options().copyDefaults(true);
             saveDefaultConfig();
         }
-        saveConfig();
-        reloadConfig();
 
         Bukkit.getPluginManager().registerEvents(new Handler(this), this);
 

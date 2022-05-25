@@ -18,49 +18,60 @@ public class Private implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+        ReplaceMethods ReplaceMethods = new ReplaceMethods(plugin);
+
         if(args.length >= 2) {
             Player recipient = Bukkit.getPlayer(args[0]);
-            String error = plugin.getConfig().getString("private.error").trim().replace("&", "\u00a7").replace("{recipient}", args[0]);
+            String error = plugin.getConfig().getString("private.error").trim();
+                error = ReplaceMethods.player(error, recipient, "recipient");
             try {
-                ReplaceMethods ReplaceMethods = new ReplaceMethods(plugin);
-                String noPerms = plugin.getConfig().getString("private.noPerms").trim().replace("&", "\u00a7");
-                String myself = plugin.getConfig().getString("private.myself").trim().replace("&", "\u00a7");
+                String noPerms = plugin.getConfig().getString("private.noPerms").trim();
+                    noPerms = ReplaceMethods.unicode(noPerms);
+                String myself = plugin.getConfig().getString("private.myself").trim();
+                    myself = ReplaceMethods.unicode(myself);
 
-                String senderFormat = plugin.getConfig().getString("private.senderFormat").trim().replace("&", "\u00a7");
+                String senderFormat = plugin.getConfig().getString("private.senderFormat").trim();
                     senderFormat = ReplaceMethods.player(senderFormat, recipient, "recipient");
                 String senderSound = plugin.getConfig().getString("private.sound.senderSound").trim().replace(" ", "_").toUpperCase();
-                String recipientFormat = plugin.getConfig().getString("private.recipientFormat").trim().replace("&", "\u00a7");
+                String recipientFormat = plugin.getConfig().getString("private.recipientFormat").trim();
                     recipientFormat = ReplaceMethods.player(recipientFormat, ((Player) sender), "sender");
+                String message = plugin.getConfig().getString("private.message").trim();
+                    message = ReplaceMethods.player(message, ((Player) sender), "sender");
                 String recipientSound = plugin.getConfig().getString("private.sound.recipientSound").trim().replace(" ", "_").toUpperCase();
 
                 Float soundVolume = Float.parseFloat(plugin.getConfig().getString("private.sound.volume").trim());
                 Float soundSpeed = Float.parseFloat(plugin.getConfig().getString("private.sound.pitch").trim());
-                String soundMessage = plugin.getConfig().getString("private.sound.message").trim().replace("&", "\u00a7");
-                    soundMessage = ReplaceMethods.player(soundMessage, ((Player) sender), "sender");
 
                 if (sender instanceof Player) {
-                    if (sender.hasPermission("lc.private")) {
+                    if (sender.hasPermission("lc.chat.Private.write")) {
                         if (recipient.isOnline()) {
+
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 1; i < args.length; i++) sb.append(args[i]).append(" ");
+                            if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
+                            String msg = sb.toString().trim();
+
                             if (recipient != sender) {
-                                StringBuilder sb = new StringBuilder();
-                                for (int i = 1; i < args.length; i++) sb.append(args[i]).append(" ");
-                                if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
-                                String msg = sb.toString().trim();
+                                if(recipient.hasPermission("lc.chat.Private.see")) {
+                                    if(senderFormat.length() != 0) {
+                                        sender.sendMessage(ReplaceMethods.message(senderFormat, msg));
+                                    }
+                                    if (senderSound.length() != 0) {
+                                        ((Player) sender).playSound(((Player) sender).getLocation(), Sound.valueOf(senderSound), soundVolume, soundSpeed);
+                                    }
+                                    recipient.sendMessage(ReplaceMethods.message(recipientFormat, msg));
+                                    if (recipientSound.length() != 0) {
+                                        recipient.playSound(recipient.getLocation(), Sound.valueOf(recipientSound), soundVolume, soundSpeed);
+                                    }
+                                    recipient.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                } else {
 
-                                sender.sendMessage(senderFormat.replace("{message}", msg));
-                                if (senderSound.length() != 0) {
-                                    ((Player) sender).playSound(((Player) sender).getLocation(), Sound.valueOf(senderSound), soundVolume, soundSpeed);
                                 }
-                                recipient.sendMessage(recipientFormat.replace("{message}", msg));
-                                if (recipientSound.length() != 0) {
-                                    recipient.playSound(recipient.getLocation(), Sound.valueOf(recipientSound), soundVolume, soundSpeed);
-                                }
-                                recipient.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(soundMessage));
-
                                 return true;
                             } else {
                                 if (myself.length() != 0) {
-                                    sender.sendMessage(myself);
+                                    sender.sendMessage(ReplaceMethods.message(myself, msg));
                                 }
                                 return true;
                             }

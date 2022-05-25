@@ -7,7 +7,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import tire.lightchat.messages.*;
+import tire.lightchat.messages.Join;
+import tire.lightchat.messages.Quit;
 import tire.lightchat.modules.ReplaceMethods;
 import tire.lightchat.chats.Global;
 import tire.lightchat.chats.Local;
@@ -31,18 +32,18 @@ public class Handler implements Listener {
 
         //Префиксы
         String[] prefixes  = new String[3];
-        prefixes[0] = plugin.getConfig().getString("globalChat.prefix"); // Глобальный чат
-        prefixes[1] = plugin.getConfig().getString("localChat.prefix"); // Локальный чат
-        prefixes[2] = plugin.getConfig().getString("worldChat.prefix"); // Мировой чат
+        prefixes[0] = plugin.getConfig().getString("chats.globalChat.prefix"); // Глобальный чат
+        prefixes[1] = plugin.getConfig().getString("chats.localChat.prefix"); // Локальный чат
+        prefixes[2] = plugin.getConfig().getString("chats.worldChat.prefix"); // Мировой чат
 
         String prefixError = plugin.getConfig().getString("prefixError");
         String remExtraSpaces = plugin.getConfig().getString("remExtraSpaces");
 
         //Режим вкл/выкл
         String[] enables  = new String[3];
-        enables[0] = plugin.getConfig().getString("globalChat.enable"); // Глобальный чат
-        enables[1] = plugin.getConfig().getString("localChat.enable"); // Локальный чат
-        enables[2] = plugin.getConfig().getString("worldChat.enable"); // Мировой чат
+        enables[0] = plugin.getConfig().getString("chats.globalChat.enable"); // Глобальный чат
+        enables[1] = plugin.getConfig().getString("chats.localChat.enable"); // Локальный чат
+        enables[2] = plugin.getConfig().getString("chats.worldChat.enable"); // Мировой чат
         
         if(Message.length() != 0) {
             // Проверка на совпадение первого символа сообщения с одним из префиксов

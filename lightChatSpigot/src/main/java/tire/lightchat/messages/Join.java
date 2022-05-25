@@ -18,7 +18,9 @@ public class Join {
     }
 
     public void join(PlayerJoinEvent e) {
-        e.setJoinMessage(null);
+        if((plugin.getConfig().getString("messages.join.format").trim()).length() != 0) {
+            e.setJoinMessage(null);
+        }
 
         Player Player = e.getPlayer();
         String Name = Player.getName();
@@ -35,9 +37,8 @@ public class Join {
             }
         }
 
-        String msg = plugin.getConfig().getString("messages.join.format")
-                .replace("{message}", messages.get(Random.rnd(0, messages.size() - 1)))
-                .replace("&", "\u00a7");
+        String msg = plugin.getConfig().getString("messages.join.format");
+            msg = new ReplaceMethods(plugin).message(msg, new ReplaceMethods(plugin).unicode(messages.get(Random.rnd(0, messages.size() - 1))));
             msg = new ReplaceMethods(plugin).player(msg, Player, "player");
 
         Bukkit.broadcastMessage(msg);

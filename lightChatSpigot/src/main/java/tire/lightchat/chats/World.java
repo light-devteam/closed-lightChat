@@ -16,24 +16,36 @@ public class World {
     public void sendMessage(String Message, AsyncPlayerChatEvent e) {
         ReplaceMethods ReplaceMethods = new ReplaceMethods(plugin);
 
-        String messageColor = plugin.getConfig().getString("worldChat.messageColor").replace("&", "\u00a7");
-        String ping = plugin.getConfig().getString("worldChat.ping");
-
-        String format = plugin.getConfig().getString("worldChat.format").replace("&", "\u00a7");
+        String messageColor = plugin.getConfig().getString("chats.worldChat.messageColor");
+            messageColor = ReplaceMethods.unicode(messageColor);
+        String noPerms = plugin.getConfig().getString("chats.worldChat.noPerms");
+            noPerms = ReplaceMethods.unicode(noPerms);
+        String format = plugin.getConfig().getString("chats.worldChat.format");
             format = ReplaceMethods.player(format, e.getPlayer(), "sender");
 
-        if(ping.equalsIgnoreCase("true")) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getWorld().equals(e.getPlayer().getWorld())) {
-                    p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+        String ping = plugin.getConfig().getString("chats.worldChat.ping");
+
+        if(e.getPlayer().hasPermission("lc.chat.World.write")) {
+            if (ping.equalsIgnoreCase("true") && e.getPlayer().hasPermission("lc.chat.World.mention")) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (p.hasPermission("lc.chat.Local.see")) {
+                        if (p.getWorld().equals(e.getPlayer().getWorld())) {
+                            p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+                        }
+                    }
+                }
+            } else {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (p.hasPermission("lc.chat.Local.see")) {
+                        if (p.getWorld().equals(e.getPlayer().getWorld())) {
+                            p.sendMessage(ReplaceMethods.message(format, Message, messageColor));
+                        }
+                    }
                 }
             }
-        }
-        else {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getWorld().equals(e.getPlayer().getWorld())) {
-                    p.sendMessage(format);
-                }
+        } else {
+            if (noPerms.length() != 0) {
+                e.getPlayer().sendMessage(noPerms);
             }
         }
     }

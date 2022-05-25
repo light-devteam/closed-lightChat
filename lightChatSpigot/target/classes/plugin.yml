@@ -1,12 +1,12 @@
 name: LightChat
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: tire.lightchat.main.LightChat
 api-version: 1.18
-softdepend: [ Vault ]
+softdepend: [ Vault, PlaceholderAPI ]
 authors: [ TiRe_ ]
 description: Chat plugin for minecraft
 commands:
   lightchat:
     description: Plugin setup
-    usage: /lightchat
+    usage: /lightchat <reload>
     aliases: [ lightc, lchat, lc ]
