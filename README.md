@@ -123,7 +123,8 @@ Of all the entries, a random one will be chosen.
 
 
 # Permissions
-+ **`lc.private`** - Gives the owner the right to send private messages. 
++ **`lc.chat.Private.write`** - Allows owner to send private messages. 
++ **`lc.chat.Private.see`** - Allows owner to receive private messages.
 + **`lc.reload`** - Gives the right to reload the config.
 
 # Useful links
