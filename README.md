@@ -105,7 +105,7 @@ Of all the entries, a random one will be chosen.
 | **`join.first`**    | Message when a player first joins the server. :arrow_up_down:                                                                                                                                                    | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 | **`join.main`**     | Message when a player joins the server. :arrow_up_down:                                                                                                                                                          | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 | **`join.nickname`** | Where `nickname` is the nickname of the entered player. One of these messages will be displayed when a player with the nickname `nickname` logs in. There can be any number of such structures. :arrow_up_down:  | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
-| **`quit.format`**   | The format of the quit message. <br>**Leave blank to disable.**                                                                                                                                                  | <ul><li>**`{message}`** - Server logout message.</li></ul>                                   |
+| **`quit.format`**   | The format of the quit message. <br>**Leave blank to disable.**                                                                                                                                                  | <ul><li>**`{message}`** - Server logout message.</li></ul>                                  |
 | **`quit.main`**     | Message when a player quits the server. :arrow_up_down:                                                                                                                                                          | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 | **`quit.nickname`** | Where `nickname` is the nickname of the entered player. One of these messages will be displayed when a player with the nickname `nickname` logs out. There can be any number of such structures. :arrow_up_down: | <ul><li>**`{player}`**</li> <li>**`{playerPrefix}`**</li> <li>**`{playerSuffix}`**</li></ul>|
 
@@ -117,14 +117,15 @@ Of all the entries, a random one will be chosen.
 | **`error`**   | The message that the sender of the command will see if an error occurs while reloading the config. <br>**Leave blank to disable.**                                                                           |                                  |
 
 # Preset Commands
-|        Command        |Aliases                 |Description                                                                                  |
-|:---------------------:|------------------------|---------------------------------------------------------------------------------------------|
+|        Command        |Aliases                 |Description                                                                                      |
+|:---------------------:|------------------------|-------------------------------------------------------------------------------------------------|
 | `/lightchat <reload>` | `lc`, `lightc`, `lchat`| Plugin configuration command. <br><br>Arguments: <ul><li>**`reload`** - config reload</li></ul> |
 
 
 # Permissions
-+ **`lc.chat.Private.write`** - Allows owner to send private messages. 
-+ **`lc.chat.Private.see`** - Allows owner to receive private messages.
++ **`lc.chat.<Chat>.write`** - Allows owner of the right to send `<Chat>` messages. 
++ **`lc.chat.<Chat>.see`** - Allows owner of the right to receive `<Chat>` messages.
++ **`lc.chat.<Chat>.mention`** - Allows owner of the right to mention people in the `<Chat>`. The right does not apply to private chat.
 + **`lc.reload`** - Gives the right to reload the config.
 
 # Useful links
