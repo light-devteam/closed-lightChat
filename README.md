@@ -53,7 +53,7 @@ By default in the config **`&`** (*You can change this sign in the config*) is r
 |**`formatSymbol`**    | Specifies how the formatting mark should look like. Default `&`|                                                                                          |
 
 
-## chats.globalChat, chats.localChat, chats.worldChat:
+## Chats.globalChat, Chats.localChat, Chats.worldChat:
 
 |        String        |Description                                                                                                                                                                      |Placeholders                                                                                                                                                                                                               |
 |:--------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
