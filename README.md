@@ -140,6 +140,8 @@ Of all the entries, a random one will be chosen.
 + **`lc.chat.<Chat>.mention`** - Allows owner of the right to mention people in the `<Chat>`. The right does not apply to private chat.
 + **`lc.reload`** - Gives the right to reload the config.
 
+**Chats** (What can be replaced by **`<Chats>`**): `Global`, `Local`, `World`, `Private`.
+
 # Useful links
 + **[Names of all sounds in the game](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html).**  
 + **[Text formatting in Minecraft](https://minecraft.fandom.com/wiki/Formatting_codes).**
