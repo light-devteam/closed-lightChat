@@ -27,7 +27,7 @@ public class Private implements CommandExecutor {
                 error = ReplaceMethods.player(error, recipient, "recipient");
             try {
                 String noPerms = plugin.getConfig().getString("private.noPerms").trim();
-                    noPerms = ReplaceMethods.unicode(noPerms);
+                    noPerms = ReplaceMethods.player(noPerms, (Player)sender, "sender");
                 String myself = plugin.getConfig().getString("private.myself").trim();
                     myself = ReplaceMethods.unicode(myself);
 

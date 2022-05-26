@@ -20,21 +20,29 @@ public class Local {
         String messageColor = plugin.getConfig().getString("chats.localChat.messageColor");
             messageColor = ReplaceMethods.unicode(messageColor);
         String noPerms = plugin.getConfig().getString("chats.localChat.noPerms");
-            noPerms = ReplaceMethods.unicode(noPerms);
+            noPerms = ReplaceMethods.player(noPerms, e.getPlayer(), "sender");
         String format = plugin.getConfig().getString("chats.localChat.format");
             format = ReplaceMethods.player(format, e.getPlayer(), "sender");
 
         String ping = plugin.getConfig().getString("chats.localChat.ping");
+        String noPermsPing = plugin.getConfig().getString("chats.localChat.noPermsPing");
+            noPermsPing = ReplaceMethods.player(noPermsPing, e.getPlayer(), "sender");
 
         float distantion = Float.parseFloat(plugin.getConfig().getString("chats.localChat.chatDistantion").trim());
 
         if(e.getPlayer().hasPermission("lc.chat.Local.write")) {
-            if (ping.equalsIgnoreCase("true") && e.getPlayer().hasPermission("lc.chat.Local.mention")) {
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (p.hasPermission("lc.chat.Local.see")) {
-                        if (e.getPlayer().getWorld().equals(p.getWorld()) && p.getLocation().distance(e.getPlayer().getLocation()) <= distantion) {
-                            p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+            if (ping.equalsIgnoreCase("true")) {
+                if(e.getPlayer().hasPermission("lc.chat.Local.mention")) {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        if (p.hasPermission("lc.chat.Local.see")) {
+                            if (e.getPlayer().getWorld().equals(p.getWorld()) && p.getLocation().distance(e.getPlayer().getLocation()) <= distantion) {
+                                p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+                            }
                         }
+                    }
+                } else {
+                    if (noPermsPing.length() != 0) {
+                        e.getPlayer().sendMessage(noPermsPing);
                     }
                 }
             } else {

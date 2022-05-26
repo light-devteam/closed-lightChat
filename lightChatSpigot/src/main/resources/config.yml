@@ -1,3 +1,7 @@
+config:
+  placeholder: '{placeholder}'
+  formatSymbol: '&'
+
 chats:
   globalChat:
     # true, else - false
@@ -9,6 +13,7 @@ chats:
     # true, else - false
     ping: 'true'
     noPerms: '&cУ вас нет прав на отправку сообщений в Глобальный чат!'
+    noPermsPing: '&cУ вас нет прав на упоминание игроков в Глобальном чате!'
   localChat:
     chatDistantion: '99.9'
     # true, else - false
@@ -20,6 +25,7 @@ chats:
     # true, else - false
     ping: 'true'
     noPerms: '&cУ вас нет прав на отправку сообщений в Локальный чат!'
+    noPermsPing: '&cУ вас нет прав на упоминание игроков в Локальном чате!'
   worldChat:
     # true, else - false
     enable: 'true'
@@ -30,6 +36,7 @@ chats:
     # true, else - false
     ping: 'true'
     noPerms: '&cУ вас нет прав на отправку сообщений в Мировой чат!'
+    noPermsPing: '&cУ вас нет прав на упоминание игроков в Мировом чате!'
   # {senderPrefix}, {sender}, {senderSuffix}, {message}, {globalChatPrefix}, {localChatPrefix}, {worldChatPrefix}
   prefixError: 'Ваше сообщение не было отправлено т.к. чат с соответствующим префиксом не был найден. Доступные префиксы: "{globalChatPrefix}" - Глобальный чат, "{localChatPrefix}" - Локальный чат, "{worldChatPrefix}" - Чат измерения.'
 
@@ -94,7 +101,3 @@ reload:
   # {senderPrefix}, {sender}, {senderSuffix}
   noPerms: '&cУ вас недостаточно прав для использования данной команды!'
   error: '&cВо время перезагрузки конфига произошла непредвиденная ошибка.'
-
-config:
-  placeholder: '{placeholder}'
-  formatSymbol: '&'

@@ -19,19 +19,27 @@ public class World {
         String messageColor = plugin.getConfig().getString("chats.worldChat.messageColor");
             messageColor = ReplaceMethods.unicode(messageColor);
         String noPerms = plugin.getConfig().getString("chats.worldChat.noPerms");
-            noPerms = ReplaceMethods.unicode(noPerms);
+            noPerms = ReplaceMethods.player(noPerms, e.getPlayer(), "sender");
         String format = plugin.getConfig().getString("chats.worldChat.format");
             format = ReplaceMethods.player(format, e.getPlayer(), "sender");
 
         String ping = plugin.getConfig().getString("chats.worldChat.ping");
+        String noPermsPing = plugin.getConfig().getString("chats.worldChat.noPermsPing");
+            noPermsPing = ReplaceMethods.player(noPermsPing, e.getPlayer(), "sender");
 
         if(e.getPlayer().hasPermission("lc.chat.World.write")) {
-            if (ping.equalsIgnoreCase("true") && e.getPlayer().hasPermission("lc.chat.World.mention")) {
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (p.hasPermission("lc.chat.Local.see")) {
-                        if (p.getWorld().equals(e.getPlayer().getWorld())) {
-                            p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+            if (ping.equalsIgnoreCase("true")) {
+                if(e.getPlayer().hasPermission("lc.chat.World.mention")) {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        if (p.hasPermission("lc.chat.Local.see")) {
+                            if (p.getWorld().equals(e.getPlayer().getWorld())) {
+                                p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+                            }
                         }
+                    }
+                } else {
+                    if (noPermsPing.length() != 0) {
+                        e.getPlayer().sendMessage(noPermsPing);
                     }
                 }
             } else {

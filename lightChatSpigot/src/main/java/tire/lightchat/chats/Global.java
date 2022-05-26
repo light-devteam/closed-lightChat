@@ -24,14 +24,22 @@ public class Global {
         String messageColor = plugin.getConfig().getString("chats.globalChat.messageColor");
             messageColor = ReplaceMethods.unicode(messageColor);
         String noPerms = plugin.getConfig().getString("chats.globalChat.noPerms");
-            noPerms = ReplaceMethods.unicode(noPerms);
+            noPerms = ReplaceMethods.player(noPerms, e.getPlayer(), "sender");
         String ping = plugin.getConfig().getString("chats.globalChat.ping");
+        String noPermsPing = plugin.getConfig().getString("chats.globalChat.noPermsPing");
+            noPermsPing = ReplaceMethods.player(noPermsPing, e.getPlayer(), "sender");
 
         if(e.getPlayer().hasPermission("lc.chat.Global.write")) {
-            if (ping.equalsIgnoreCase("true") && e.getPlayer().hasPermission("lc.chat.Global.mention")) {
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (p.hasPermission("lc.chat.Global.see")) {
-                        p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+            if (ping.equalsIgnoreCase("true")) {
+                if(e.getPlayer().hasPermission("lc.chat.Global.mention")) {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        if (p.hasPermission("lc.chat.Global.see")) {
+                            p.sendMessage(new Ping(plugin).pingEvent(Message, e.getPlayer().getName(), p, format, messageColor));
+                        }
+                    }
+                } else {
+                    if (noPermsPing.length() != 0) {
+                        e.getPlayer().sendMessage(noPermsPing);
                     }
                 }
             } else {
