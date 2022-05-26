@@ -36,14 +36,24 @@
 | **`{globalChatPrefix}`** | Global chat anchor symbol.                                                                  |
 | **`{localChatPrefix}`**  | Local chat anchor symbol.                                                                   |
 | **`{worldChatPrefix}`**  | World chat anchor symbol.                                                                   |
+  
+***Hereinafter, all placeholders will be framed like this, however, you can change this in the config.***
 
 
 *They will also be described [below](https://github.com/rTiRe/lightChat/blob/main/README.md#config-setup).*  
 <br>
-In config **`&`** is replaced by **`§`**. Text can be [formatted](https://github.com/rTiRe/lightChat/blob/main/README.md#useful-links) in the same way as regular text in minecraft.
+By default in the config **`&`** (*You can change this sign in the config*) is replaced by **`§`**. Text can be [formatted](https://github.com/rTiRe/lightChat/blob/main/README.md#useful-links) in the same way as regular text in minecraft.
 
 # Config setup
-## globalChat, localChat, worldChat:
+## Сonfig
+
+|        String        |Description                                                     |Placeholders                                                                              |
+|:--------------------:|----------------------------------------------------------------|------------------------------------------------------------------------------------------|
+|**`placeholder`**     | Specifies how the placeholder should look like.                | <ul><li>**`placeholder`**</li></ul>  DO NOT USE `{placeholder}` HERE. `placeholder` ONLY!|
+|**`formatSymbol`**    | Specifies how the formatting mark should look like. Default `&`|                                                                                          |
+
+
+## chats.globalChat, chats.localChat, chats.worldChat:
 
 |        String        |Description                                                                                                                                                                      |Placeholders                                                                                                                                                                                                               |
 |:--------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
