@@ -66,7 +66,8 @@ public class JSONConverter {
             } else if (item.startsWith(placeholder.split("placeholder")[0] + "json ")) {
                 array.set(i, item.substring(startl + 4, item.length() - endl));
             } else {
-                item = item.replaceAll("\\\\(\\p{Punct})", "$1");
+                item = item.replaceAll("\\\\(?![" + _format + _placeholder.split("placeholder")[0] + "n])", "\\\\\\\\");
+                item = item.replaceAll("\\\\\\\\n", "\\\\\\n");
                 item = item.replaceAll("\\\\(" + _format + "[0-9a-fklmnor]{1})", "$1");
                 item = item.replaceAll("\\\\(" + _format + _placeholder.split("placeholder")[0] + "#([A-Fa-f0-9]{3}){1,2}" + _placeholder.split("placeholder")[1] + ")", "$1");
                 item = item.replaceAll("\\\\(" + _placeholder.split("placeholder")[0] + "json[ ]+([\\s\\S]+?)[ ]+" + _placeholder.split("placeholder")[1] + ")", "$1");
