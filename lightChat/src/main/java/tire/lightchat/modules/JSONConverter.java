@@ -27,16 +27,12 @@ public class JSONConverter {
         String _placeholder = placeholder.replaceAll("(\\p{Punct})", "\\\\$1");
 
         try {
-            String fin = JSONmin(string, format, placeholder, _format, _placeholder);
-            return fin;
+            return JSONmin(string, format, placeholder, _format, _placeholder);
         } catch(Exception e) {
             string = string.replaceAll("(?<=^|[^\\\\])(" + _placeholder.split("placeholder")[0] + "json[ ]+([\\s\\S]+?)[ ]+" + _placeholder.split("placeholder")[1] + ")", "\\\\$1");
             try {
-                String fin = JSONmin(string, format, placeholder, _format, _placeholder);
-                return fin;
-            } catch(Exception ex) {
-                return JSONmin("&aThere is an error in the config line or in your message that does not allow the output line to form.\\nMost likely, one of the following characters is missing or missing: {, [, }, ], \", '. Or you entered the color code incorrectly.", format, placeholder, _format, _placeholder);
-            }
+                return JSONmin(string, format, placeholder, _format, _placeholder);
+            } catch(Exception ex) { return ""; }
         }
     }
 

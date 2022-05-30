@@ -6,12 +6,12 @@
 
     <groupId>TiRe</groupId>
     <artifactId>lightChat</artifactId>
-    <version>1.1.0-alpha</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>LightChat</name>
 
-    <description>chat plugin for minecraft</description>
+    <description>Simple, convenient and functional minecraft chat</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
