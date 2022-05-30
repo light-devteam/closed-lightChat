@@ -16,7 +16,9 @@ public class JSONConverter {
         this.plugin = plugin;
     }
 
-    public String converter(String string) {
+    public String converter(String firstString) {
+
+        String string = firstString;
 
         String format = plugin.getConfig().getString("config.formatSymbol");
         String placeholder = plugin.getConfig().getString("config.placeholder");
@@ -24,7 +26,22 @@ public class JSONConverter {
         String _format = format.replaceAll("(\\p{Punct})", "\\\\$1");
         String _placeholder = placeholder.replaceAll("(\\p{Punct})", "\\\\$1");
 
-        final String regex = "(?<=^|[^\\\\])" + _format + _placeholder.split("placeholder")[0] + "((\\\"underlined\\\":(true|false))|(\\\"bold\\\":(true|false))|(\\\"strikethrough\\\":(true|false))|(\\\"italic\\\":(true|false))|(\\\"obfuscated\\\":(true|false))|#([A-Fa-f0-9]{3}){1,2})" + _placeholder.split("placeholder")[1] + "|(?<=^|[^\\\\])" + _placeholder.split("placeholder")[0] + "json[ ]+([\\s\\S]+?)[ ]+" + _placeholder.split("placeholder")[1] + "|[\\s\\S]";
+        try {
+            String fin = JSONmin(string, format, placeholder, _format, _placeholder);
+            return fin;
+        } catch(Exception e) {
+            string = string.replaceAll("(?<=^|[^\\\\])(" + _placeholder.split("placeholder")[0] + "json[ ]+([\\s\\S]+?)[ ]+" + _placeholder.split("placeholder")[1] + ")", "\\\\$1");
+            try {
+                String fin = JSONmin(string, format, placeholder, _format, _placeholder);
+                return fin;
+            } catch(Exception ex) {
+                return JSONmin("&aThere is an error in the config line or in your message that does not allow the output line to form.\\nMost likely, one of the following characters is missing or missing: {, [, }, ], \", '. Or you entered the color code incorrectly.", format, placeholder, _format, _placeholder);
+            }
+        }
+    }
+
+    public static String JSONmin(String string, String format, String placeholder, String _format, String _placeholder) {
+        final String regex = "(?<=^|[^\\\\])" + _format + _placeholder.split("placeholder")[0] + "((\\\"underlined\\\":(true|false))|(\\\"bold\\\":(true|false))|(\\\"strikethrough\\\":(true|false))|(\\\"italic\\\":(true|false))|(\\\"obfuscated\\\":(true|false))|#([A-Fa-f0-9]{6}))" + _placeholder.split("placeholder")[1] + "|(?<=^|[^\\\\])" + _placeholder.split("placeholder")[0] + "json[ ]+([\\s\\S]+?)[ ]+" + _placeholder.split("placeholder")[1] + "|[\\s\\S]";
 
         ArrayList<String> array = new ArrayList<>();
         String str = "";
@@ -66,10 +83,10 @@ public class JSONConverter {
             } else if (item.startsWith(placeholder.split("placeholder")[0] + "json ")) {
                 array.set(i, item.substring(startl + 4, item.length() - endl));
             } else {
-                item = item.replaceAll("\\\\(?![" + _format + _placeholder.split("placeholder")[0] + "n])", "\\\\\\\\");
+                item = item.replaceAll("\\\\(?![" + _format + "n]|(" + _placeholder.split("placeholder")[0] + "json[ ]+([\\s\\S]+?)[ ]+" + _placeholder.split("placeholder")[1] + "))", "\\\\\\\\");
                 item = item.replaceAll("\\\\\\\\n", "\\\\\\n");
                 item = item.replaceAll("\\\\(" + _format + "[0-9a-fklmnor]{1})", "$1");
-                item = item.replaceAll("\\\\(" + _format + _placeholder.split("placeholder")[0] + "#([A-Fa-f0-9]{3}){1,2}" + _placeholder.split("placeholder")[1] + ")", "$1");
+                item = item.replaceAll("\\\\(" + _format + _placeholder.split("placeholder")[0] + "#([A-Fa-f0-9]{6})" + _placeholder.split("placeholder")[1] + ")", "$1");
                 item = item.replaceAll("\\\\(" + _placeholder.split("placeholder")[0] + "json[ ]+([\\s\\S]+?)[ ]+" + _placeholder.split("placeholder")[1] + ")", "$1");
                 array.set(i, "{\"text\":\"" + item.replaceAll("(\")", "\\\\$1") + "\"}");
             }
@@ -98,6 +115,38 @@ public class JSONConverter {
                 arrayJ.remove(j);
                 j--;
                 l--;
+            }
+        }
+        int len = arrayJ.length();
+        final String colorPattern = "^#[a-fA-F0-9]{6}$";
+        final String txtColors[] = {"black", "dark_blue", "dark_green", "dark_aqua", "dark_red", "dark_purple", "gold", "gray", "dark_gray", "blue", "green", "aqua", "red", "light_purple", "yellow", "white", "reset"};
+        final String hoverEvent[] = {"show_entity", "show_text", "show_item"};
+        for (int j = 0; j<len; j++) {
+            if(arrayJ.getJSONObject(j).optString("color") != null) {
+                Matcher mColor = Pattern.compile(colorPattern, Pattern.MULTILINE).matcher(arrayJ.getJSONObject(j).optString("color"));
+                int count = 0;
+                while (mColor.find()) { count++; }
+                if(!Arrays.asList(txtColors).contains(arrayJ.getJSONObject(j).optString("color")) &&  count != 1) {
+                    arrayJ.getJSONObject(j).remove("color");
+                    arrayJ.getJSONObject(j).put("color", "reset");
+                }
+            }
+            if(arrayJ.getJSONObject(j).optJSONObject("hoverEvent") != null) {
+                if(!Arrays.asList(hoverEvent).contains(arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optString("action"))) {
+                    arrayJ.getJSONObject(j).remove("hoverEvent");
+                } else if(arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optString("action").equals("show_text") && arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optJSONArray("contents") != null) {
+                    for(int p = 0; p<arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optJSONArray("contents").length(); p++) {
+                        if(arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optJSONArray("contents").getJSONObject(p).optString("color") != null) {
+                            Matcher mColorS = Pattern.compile(colorPattern, Pattern.MULTILINE).matcher(arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optJSONArray("contents").getJSONObject(p).optString("color"));
+                            int countS = 0;
+                            while (mColorS.find()) { countS++; }
+                            if(!Arrays.asList(txtColors).contains(arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optJSONArray("contents").getJSONObject(p).optString("color")) &&  countS != 1) {
+                                arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optJSONArray("contents").getJSONObject(p).remove("color");
+                                arrayJ.getJSONObject(j).optJSONObject("hoverEvent").optJSONArray("contents").getJSONObject(p).put("color", "reset");
+                            }
+                        }
+                    }
+                }
             }
         }
         return(arrayJ.toString());

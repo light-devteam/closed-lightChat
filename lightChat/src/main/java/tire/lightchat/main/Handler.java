@@ -22,7 +22,7 @@ public class Handler implements Listener {
     }
 
     @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent e) {
+    public void onPlayerChat(AsyncPlayerChatEvent e) throws Exception {
         e.setCancelled(true);
 
         sendMessage sendMessage = new sendMessage(plugin);
@@ -79,7 +79,7 @@ public class Handler implements Listener {
 
     public void callChatClass(int id, String Message,
                               String Prefix, AsyncPlayerChatEvent e,
-                              LightChat plugin) {
+                              LightChat plugin) throws Exception {
         Message = Message.substring(Prefix.length()).trim();
         if(Message.length() != 0) {
             switch (id) {
