@@ -150,6 +150,7 @@ Of all the entries, a random one will be chosen.
 *Where `{` and `}` are characters that be before and after the `placeholder` in the `config.placeholder` configuration and `&` is character that be in the `config.formatSymbol` configuration.*
 
 *If you don't specify anything in place of `<color>` or `<json>`, no formatting will be applied. It will also not apply if you insert invalid JSON instead of `<json>`.*
+**[More about JSON](https://github.com/rTiRe/lightChat/blob/main/README.md#useful-links)**
 
 # Preset Commands
 |        Command        |Aliases                 |Description                                                                                      |
@@ -168,3 +169,5 @@ Of all the entries, a random one will be chosen.
 # Useful links
 * **[Names of all sounds in the game](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)**  
 * **[Text formatting in Minecraft](https://minecraft.fandom.com/wiki/Formatting_codes)**
+* **[Raw JSON text format](https://minecraft.fandom.com/wiki/Raw_JSON_text_format)**
+* **[Tellraw Generator](https://minecraftjson.com/)**. If doesn't work **[check source code](https://github.com/ezfe/tellraw/tree/9e6a8d8ed3dd066239d63bd1199f54c937fd3def)** 
