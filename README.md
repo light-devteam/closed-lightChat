@@ -5,7 +5,8 @@
 **[`[3]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** World Chat  
 **[`[4]`](https://github.com/rTiRe/lightChat/blob/main/README.md#private)** Private Chat  
 **[`[5]`](https://github.com/rTiRe/lightChat/blob/main/README.md#ping)** Player Mentions  
-**[`[6]`](https://github.com/rTiRe/lightChat/blob/main/README.md#messages)** Custom join and quit messages
+**[`[6]`](https://github.com/rTiRe/lightChat/blob/main/README.md#messages)** Custom join and quit messages  
+**[`[7]`]()** JSON formatting
 
 **`Global Chat`** - Messages are visible to all players on the server.  
 **`Local Chat`** - Messages are visible to all players within a specified number of blocks from the message sender.  
@@ -13,6 +14,7 @@
 **`Private Chat`** - Personal correspondence of two players.  
 **`Player Mentions`** - Highlighting the nickname of the mentioned player in the chat (only for him // for everyone), accompanied by a sound notification and text above the hot bar for the mentioned player.  
 **`Custom ... messages`** - Customizable player join and quit messages.  
+**`JSON formatting`** - Ability to insert JSON formatting into strings.  
 # Requirements
 + **`SpigotMC 1.18.1`** - Kernel.  
 + **`Vault`** (optional) - Plugin.
@@ -127,6 +129,9 @@ Of all the entries, a random one will be chosen.
 | **`success`** | The message that the sender of the command will see when the config is successfully reloaded. <br>**Leave blank to disable.**                                                                                | <ul><li>**`{sender}`**</li></ul> |
 | **`noPerms`** | The message that the sender of the command will see if they do not have [permission to use the command](https://github.com/rTiRe/lightChat/blob/main/README.md#permissions). <br>**Leave blank to disable.** | <ul><li>**`{sender}`**</li></ul> |
 | **`error`**   | The message that the sender of the command will see if an error occurs while reloading the config. <br>**Leave blank to disable.**                                                                           |                                  |
+
+# JSON formatting
+
 
 # Preset Commands
 |        Command        |Aliases                 |Description                                                                                      |
