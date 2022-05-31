@@ -6,7 +6,7 @@
 **[`[4]`](https://github.com/rTiRe/lightChat/blob/main/README.md#private)** Private Chat  
 **[`[5]`](https://github.com/rTiRe/lightChat/blob/main/README.md#ping)** Player Mentions  
 **[`[6]`](https://github.com/rTiRe/lightChat/blob/main/README.md#messages)** Custom join and quit messages  
-**[`[7]`]()** JSON formatting
+**[`[7]`](https://github.com/rTiRe/lightChat/edit/main/README.md#json-formatting)** JSON formatting
 
 **`Global Chat`** - Messages are visible to all players on the server.  
 **`Local Chat`** - Messages are visible to all players within a specified number of blocks from the message sender.  
@@ -131,6 +131,13 @@ Of all the entries, a random one will be chosen.
 | **`error`**   | The message that the sender of the command will see if an error occurs while reloading the config. <br>**Leave blank to disable.**                                                                           |                                  |
 
 # JSON formatting
+With JSON support, you can create interactive text in a message. If you are embedding JSON in plain text, then you need to highlight it like this: `{json <json> }`.  
+Where `<json>` is your json insert. Note that spaces are required after `{json` and before `}`. There may be more than one, but not less.  
+If there is an error in the text color, it will be replaced with the standard one. If there is an error in the `action` inside `hoverEvent`, then `hoverEvent` will not work.  
+If there is another error in your JSON insert, then the insert will not be applied.  
+JSON inserts allow you to use hex codes to set the text color. To do this, use the `&{<color>}` construct, where `<color>` is any color supported by JSON.  
+The standard Minecraft formatting hasn't gone away and you can still use it. Moreover, JSON formatting has been set to standard. If you specify a *color* in the first JSON insert, but not specify in the one after it, then it will become the same as in the first one, and so on. This works not only with `color`, but also with `underlined`, `strikethrough`, `italic`, `bold` and `obfuscated` text.  
+In lines, line wrapping also works. To break a line, use the `\n` construct. If you want to insert the `\n` construct into your text without breaking the line, then use the `\\n` construct. More on this in the next paragraph.  
 
 
 # Preset Commands
