@@ -7,7 +7,7 @@
 **[`[4]`](https://github.com/rTiRe/lightChat/blob/main/README.md#private)** Private Chat  
 **[`[5]`](https://github.com/rTiRe/lightChat/blob/main/README.md#ping)** Player Mentions  
 **[`[6]`](https://github.com/rTiRe/lightChat/blob/main/README.md#messages)** Custom join and quit messages  
-**[`[7]`](https://github.com/rTiRe/lightChat/edit/main/README.md#json-formatting)** JSON formatting
+**[`[7]`](https://github.com/rTiRe/lightChat/blob/main/README.md#json-formatting)** JSON formatting
 
 **`Global Chat`** - Messages are visible to all players on the server.  
 **`Local Chat`** - Messages are visible to all players within a specified number of blocks from the message sender.  
