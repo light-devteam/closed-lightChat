@@ -1,4 +1,5 @@
 # lightChat - Simple, convenient and functional minecraft chat.
+
 # Functional:
 **[`[1]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** Global Chat  
 **[`[2]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** Local Chat  
@@ -14,10 +15,12 @@
 **`Private Chat`** - Personal correspondence of two players.  
 **`Player Mentions`** - Highlighting the nickname of the mentioned player in the chat (only for him // for everyone), accompanied by a sound notification and text above the hot bar for the mentioned player.  
 **`Custom ... messages`** - Customizable player join and quit messages.  
-**`JSON formatting`** - Ability to insert JSON formatting into strings.  
+**`JSON formatting`** - Ability to insert JSON formatting into strings.
+
 # Requirements
-+ **`SpigotMC 1.18.1`** - Kernel.  
-+ **`Vault`** (optional) - Plugin.
+* **`SpigotMC 1.18.1`** - Kernel.  
+* **`Vault`** (optional) - Plugin.
+
 # Placeholders and Text formatting
 *Some of the lines have comments (`# comment`) above them indicating supported placeholders or other notes and possible values.*  
 |        Placeholder       |Description                                                                                  |
@@ -38,8 +41,9 @@
 | **`{globalChatPrefix}`** | Global chat anchor symbol.                                                                  |
 | **`{localChatPrefix}`**  | Local chat anchor symbol.                                                                   |
 | **`{worldChatPrefix}`**  | World chat anchor symbol.                                                                   |
+| **`placeholder`**        | Without `{` and `}`. The key placeholder on which all others depend                         |
   
-***Hereinafter, all placeholders will be framed like this, however, you can change this in the config.***
+***Hereinafter, all placeholders will be framed like this: `{` and `}`, however, you can change this in the config.***
 
 
 *They will also be described [below](https://github.com/rTiRe/lightChat/blob/main/README.md#config-setup).*  
@@ -131,14 +135,21 @@ Of all the entries, a random one will be chosen.
 | **`error`**   | The message that the sender of the command will see if an error occurs while reloading the config. <br>**Leave blank to disable.**                                                                           |                                  |
 
 # JSON formatting
-With JSON support, you can create interactive text in a message. If you are embedding JSON in plain text, then you need to highlight it like this: `{json <json> }`.  
-Where `<json>` is your json insert. Note that spaces are required after `{json` and before `}`. There may be more than one, but not less.  
-If there is an error in the text color, it will be replaced with the standard one. If there is an error in the `action` inside `hoverEvent`, then `hoverEvent` will not work.  
-If there is another error in your JSON insert, then the insert will not be applied.  
-JSON inserts allow you to use hex codes to set the text color. To do this, use the `&{<color>}` construct, where `<color>` is any color supported by JSON.  
-The standard Minecraft formatting hasn't gone away and you can still use it. Moreover, JSON formatting has been set to standard. If you specify a *color* in the first JSON insert, but not specify in the one after it, then it will become the same as in the first one, and so on. This works not only with `color`, but also with `underlined`, `strikethrough`, `italic`, `bold` and `obfuscated` text.  
-In lines, line wrapping also works. To break a line, use the `\n` construct. If you want to insert the `\n` construct into your text without breaking the line, then use the `\\n` construct. More on this in the next paragraph.  
+* With JSON support, you can create interactive text in a message. If you are embedding JSON in plain text, then you need to highlight it like this: `{json <json> }`.  
+* Where `<json>` is your json insert. Note that spaces are required after `{json` and before `}`. There may be more than one, but not less.  
+* If there is an error in the text color, it will be replaced with the standard one. If there is an error in the `action` inside `hoverEvent`, then `hoverEvent` will not work. If there is another error in your JSON insert, then the insert will not be applied.  
+* JSON inserts allow you to use hex codes to set the text color. To do this, use the `&{<color>}` construct, where `<color>` is any color supported by JSON.  
+* The standard Minecraft formatting hasn't gone away and you can still use it. Moreover, JSON formatting has been set to standard. If you specify a *color* in the first JSON insert, but not specify in the one after it, then it will become the same as in the first one, and so on. This works not only with `color`, but also with `underlined`, `strikethrough`, `italic`, `bold` and `obfuscated` text.  
+* In lines, line wrapping also works. To break a line, use the `\n` construct. If you want to insert the `\n` construct into your text without breaking the line, then use the `\\n` construct. More on this in the next paragraph.  
+* The `\` character cancels the formatting. For example, `\&3text` will return `&3text` instead of colored `text`. Here are all possible cancellations:
+  * `\&0` `\&1` `\&2` `\&3` `\&4` `\&5` `\&6` `\&7` `\&8` `\&9` `\&a` `\&b` `\&c` `\&d` `\&e` `\&f` `\&k` `\&l` `\&m` `\&n` `\&o` `\&r`
+  * `\&{<color>}`
+  * `\{json <json> }`
+  * `\\n`
 
+*Where `{` and `}` are characters that be before and after the `placeholder` in the `config.placeholder` configuration and `&` is character that be in the `config.formatSymbol` configuration.*
+
+*If you don't specify anything in place of `<color>` or `<json>`, no formatting will be applied. It will also not apply if you insert invalid JSON instead of `<json>`.*
 
 # Preset Commands
 |        Command        |Aliases                 |Description                                                                                      |
@@ -147,13 +158,13 @@ In lines, line wrapping also works. To break a line, use the `\n` construct. If 
 
 
 # Permissions
-+ **`lc.chat.<Chat>.write`** - Allows owner of the right to send `<Chat>` messages. 
-+ **`lc.chat.<Chat>.see`** - Allows owner of the right to receive `<Chat>` messages.
-+ **`lc.chat.<Chat>.mention`** - Allows owner of the right to mention people in the `<Chat>`. The right does not apply to private chat.
-+ **`lc.reload`** - Gives the right to reload the config.
+* **`lc.chat.<Chat>.write`** - Allows owner of the right to send `<Chat>` messages. 
+* **`lc.chat.<Chat>.see`** - Allows owner of the right to receive `<Chat>` messages.
+* **`lc.chat.<Chat>.mention`** - Allows owner of the right to mention people in the `<Chat>`. The right does not apply to private chat.
+* **`lc.reload`** - Gives the right to reload the config.
 
 **Chats** (What can be replaced by **`<Chats>`**): `Global`, `Local`, `World`, `Private`.
 
 # Useful links
-+ **[Names of all sounds in the game](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html).**  
-+ **[Text formatting in Minecraft](https://minecraft.fandom.com/wiki/Formatting_codes).**
+* **[Names of all sounds in the game](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)**  
+* **[Text formatting in Minecraft](https://minecraft.fandom.com/wiki/Formatting_codes)**
