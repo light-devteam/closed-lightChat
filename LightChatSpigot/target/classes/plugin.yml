@@ -1,0 +1,5 @@
+name: LightChat
+version: '2.0-SNAPSHOT'
+main: ru.rtire.lightchat.LightChat
+authors: [ rTiRe ]
+description: Simple chat plugin for minecraft

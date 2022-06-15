@@ -1,0 +1,5 @@
+name: LightChat
+version: '${project.version}'
+main: ru.rtire.lightchat.LightChat
+authors: [ rTiRe ]
+description: Simple chat plugin for minecraft
