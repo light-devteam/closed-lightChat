@@ -6,37 +6,27 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.entity.Player;
 
-import ru.rtire.lightchat.api.ChatEvent;
 import ru.rtire.lightchat.LightChat;
+import ru.rtire.lightchat.api.ChatEvent;
 
 public class ChatListener implements Listener {
     private LightChat plugin;
-    private AsyncPlayerChatEvent e;
-    private ru.rtire.lightchat.api.ChatEvent ChatEvent;
 
-    public ChatListener() { this.plugin = LightChat.getInstance(); }
+    public ChatListener() {
+        this.plugin = LightChat.getInstance();
+    }
 
     @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent e) throws Exception {
+    public void onPlayerChat(AsyncPlayerChatEvent e) {
+        ChatEvent.setEvent(e);
         e.setCancelled(true);
-        this.e = e;
-        eventChecker(e);
-    }
-    public void eventChecker(AsyncPlayerChatEvent e) {
-        eventCaller();
-        if(!ChatEvent.isCancelled()) {
-            new Chat().chatCaller(e);
-        }
-    }
-    public void eventChecker(String Message, Player Sender) {
-        eventCaller();
-        if(!ChatEvent.isCancelled()) {
-            new Chat().chatCaller(Message, Sender);
-        }
+        eventCaller(e);
     }
 
-    private void eventCaller() {
-        Bukkit.getPluginManager().callEvent(ChatEvent);
-        ChatEvent.setEvent(e);
+    public void eventCaller(AsyncPlayerChatEvent e) {
+        new Chat().chatCaller(e);
+    }
+    public void eventCaller(String Message, String SenderNickname) {
+        new Chat().chatCaller(Message, SenderNickname);
     }
 }
