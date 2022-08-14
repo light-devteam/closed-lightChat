@@ -1,6 +1,28 @@
 general:
   placeholder: '{placeholder}'
   format: '&'
+  mentions:
+    inFormat: '@{mentioned}'
+    outFormat: '[{mentionedPrefix}]{mentioned}'
+    outFormatMarker: '&6[{mentionedPrefix}]{mentioned}'
+
+    message:
+      # hotbar или chat
+      display: 'hotbar'
+      message: '&6Вас упомянули в чате!'
+      selfReference: '&6Зачем упоминать себя?..'
+    sound:
+      # empty equals 'off'
+      sound: 'BLOCK_BUBBLE_COLUMN_BUBBLE_POP'
+      volume: '10'
+      pitch: '1'
+  chat:
+    prefixError:
+      display: 'chat'
+      message: '{sender}, Ваше сообщение не было отправлено т.к. чат с соответствующим префиксом не был найден.'
+    noOneHeard:
+      display: 'hotbar'
+      message: '{sender}, Вас никто не услышал... :('
 
 
 #  #=#=#=#=#=#=#=#=#=#
@@ -16,7 +38,7 @@ general:
 #   format (формат сообщение) - определяет то, как будет выглядеть сообщение в чате.
 #   В нем могут присутствовать placeholder'ы, указанные в README файле на github.
 # <---------->
-#   formatting (форматирование) - форматирование текста сообщения.
+#   color (цвет) - цвет и форматирование текста сообщения.
 #   Нужено для того, что бы корректно отображать текст, идущий после упоминаний.
 #   Оставьте пустым для установки стандартного форматирования (§r).
 # <---------->
@@ -77,20 +99,20 @@ general:
 chats:
   global:
     prefix: '!'
-    distance: 100
+    distance: -2
+    #sender
     format: '&f&6G&f | &2[{senderPrefix}]&6{sender} &6> {message}'
     color: '&f'
     cooldown: 0
     price: 0
     mentions: true
     commands: 'global'
+    # без json, только цвета
     cmdUsage: 'Для отправки сообщения в чат используйте /{command} <message>, либо напишите "{chatPrefix}" перед сообщением.'
+    # без json, только цвета
     cmdDescription: 'Отправка сообщения в глобальный чат.'
     log: false
     console: false
-    noPerms: '&cУ вас нет прав на отправку сообщений в Глобальный чат!'
-    notCooledDown: '&cХей! Полегче! Подожди еще {seconds}с, прежде чем отправить сообщение.'
-    noPermsMention: '&cУ вас нет прав на упоминание игроков в Локальном чате!'
-chatSettings:
-  prefixError: 'Ваше сообщение не было отправлено т.к. чат с соответствующим префиксом не был найден. Доступные префиксы: "{globalPrefix}" - Глобальный чат, "{localPrefix}" - Локальный чат, "{worldPrefix}" - Чат измерения.'
-  noOneHeard: 'Вас никто не услышал... :('
+    noPerms: '&c{sender}, у Вас нет прав на отправку сообщений в Глобальный чат!'
+    notCooledDown: '&cХей, {sender}! Полегче! Подожди еще {seconds}с, прежде чем отправить сообщение.'
+    noPermsMention: '&c{sender}, у Вас нет прав на упоминание игроков в Глобальном чате!'

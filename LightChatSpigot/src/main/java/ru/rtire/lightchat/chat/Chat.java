@@ -1,18 +1,32 @@
 package ru.rtire.lightchat.chat;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import ru.rtire.lightchat.LightChat;
 import ru.rtire.lightchat.api.ChatEvent;
+import ru.rtire.lightchat.modules.MessageFormatter;
 
-public class Chat {
+public class Chat implements CommandExecutor {
     private LightChat plugin;
+    private String Chat;
 
     public Chat() {
         this.plugin = LightChat.getInstance();
+    }
+    public Chat(String Chat) {
+        this.plugin = LightChat.getInstance();
+        this.Chat = Chat;
     }
 
     public void chatCaller(AsyncPlayerChatEvent e) {
@@ -26,9 +40,15 @@ public class Chat {
     }
 
     private void chatDefinition(String Message, Player Sender, String SenderNickname) {
+        MessageFormatter MessageFormatter = new MessageFormatter();
+        MessageSender MessageSender = new MessageSender();
+
+        String prefixErrorDisplay = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.prefixError.display").trim(), Sender, "sender");
+        String prefixError = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.prefixError.message").trim(), Sender, "sender");
+
         HashMap<String, String> Prefixes = new HashMap<>();
         for (String s : new ArrayList<>(plugin.getConfig().getConfigurationSection("chats").getKeys(false))) {
-            Prefixes.put(s, plugin.getConfig().getString("chats." + s + ".prefix"));
+            Prefixes.put(s, plugin.getConfig().getString(String.format("chats.%s.prefix", s)));
         }
         for (Map.Entry<String, String> entry : Prefixes.entrySet()) {
             String Chat = entry.getKey();
@@ -40,9 +60,36 @@ public class Chat {
                 } else {
                     sendingMessage(Message, Sender, SenderNickname, Chat);
                 }
-                break;
+                return;
             }
         }
+        if(prefixError.length() > 0) {
+            if (prefixErrorDisplay.equalsIgnoreCase("hotbar")) {
+                Sender.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefixError));
+            }
+            else if (prefixErrorDisplay.equalsIgnoreCase("chat")) {
+                MessageSender.send(Sender, prefixError);
+            }
+        }
+    }
+
+    public boolean onCommand(CommandSender Sender, Command cmd, String label, String[] args) {
+        if(args.length >= 1) {
+            if (Sender instanceof Player) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < args.length; i++) sb.append(args[i]).append(" ");
+                if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
+                String Message = sb.toString().trim();
+                Player PlayerSender = (Player)Sender;
+                String SenderNickname = PlayerSender.getName();
+
+                sendingMessage(Message, PlayerSender, SenderNickname, this.Chat);
+            } else {
+                plugin.getLogger().warning("Unable to send private message from console.");
+            }
+            return true;
+        }
+        return false;
     }
 
     private void sendingAnEmulatedMessage(String Message, String SenderNickname, String Chat) {
@@ -50,6 +97,95 @@ public class Chat {
     }
 
     private void sendingMessage(String Message, Player Sender, String SenderNickname, String Chat) {
-        Sender.sendMessage(Chat + "|" + SenderNickname + " : " + Message);
+        MessageFormatter MessageFormatter = new MessageFormatter();
+        MessageSender MessageSender = new MessageSender();
+
+        String Format = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.format", Chat)).trim(), Sender, "sender");
+        String Color = MessageFormatter.unicode(plugin.getConfig().getString(String.format("chats.%s.color", Chat)).trim());
+        String Nickname = SenderNickname;
+        String DisplayNickname = Sender.getDisplayName();
+        Float Distance = Float.parseFloat(plugin.getConfig().getString(String.format("chats.%s.distance", Chat)).trim());
+
+        Boolean Mentions = plugin.getConfig().getBoolean(String.format("chats.%s.mentions", Chat));
+        Boolean Log = plugin.getConfig().getBoolean(String.format("chats.%s.log", Chat));
+        Boolean Console = plugin.getConfig().getBoolean(String.format("chats.%s.console", Chat));
+
+        int cooldown = plugin.getConfig().getInt(String.format("chats.%s.cooldown", Chat));
+        int price = plugin.getConfig().getInt(String.format("chats.%s.price", Chat));
+
+        String noPerms = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPerms", Chat)).trim(), Sender, "sender");
+        String notCooledDown = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.notCooledDown", Chat)).trim(), Sender, "sender");
+        String noPermsMention = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPermsMention", Chat)).trim(), Sender, "sender");
+
+        if(Sender.hasPermission(String.format("lc.chat.%s.write", Chat))) {
+            ArrayList<Player> recipients = recipientsList(Distance, Sender, Chat);
+            if(Mentions) {
+                if(Sender.hasPermission(String.format("lc.chat.%s.mention", Chat))) {
+                    for (Player p : recipients) {
+                        MessageSender.send(p, new Mentions().pingEvent(Message, Nickname, p, Format, Color));
+                    }
+                } else {
+                    if (noPermsMention.length() > 0) {
+                        MessageSender.send(Sender, noPermsMention);
+                    }
+                    for (Player p : recipients) {
+                        MessageSender.send(p, MessageFormatter.message(Format, Message, Color));
+                    }
+                }
+            } else {
+                for (Player p : recipients) {
+                    MessageSender.send(p, MessageFormatter.message(Format, Message, Color));
+                }
+            }
+        } else {
+            if (noPerms.length() > 0) {
+                MessageSender.send(Sender, noPerms);
+            }
+        }
+    }
+
+
+
+    public ArrayList recipientsList(Float Distance, Player Sender, String Chat) {
+        MessageFormatter MessageFormatter = new MessageFormatter();
+        MessageSender MessageSender = new MessageSender();
+
+        ArrayList<Player> recipients = new ArrayList<Player>();
+
+        String noOneHeardDisplay = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.noOneHeard.display").trim(), Sender, "sender");
+        String noOneHeard = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.noOneHeard.message").trim(), Sender, "sender");
+
+        if(Distance <= -2) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if(p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
+                    recipients.add(p);
+                }
+            }
+        }
+        else if(Distance == -1) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if(p.getWorld().equals(Sender.getWorld()) && p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
+                    recipients.add(p);
+                }
+            }
+        }
+        else if(Distance >= 0) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if(p.getWorld().equals(Sender.getWorld()) && p.getLocation().distance(Sender.getLocation()) <= Distance && p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
+                    recipients.add(p);
+                }
+            }
+        }
+        if(recipients.size() <= 1) {
+            if(noOneHeard.length() > 0) {
+                if (noOneHeardDisplay.equalsIgnoreCase("hotbar")) {
+                    Sender.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(noOneHeard));
+                }
+                else if (noOneHeardDisplay.equalsIgnoreCase("chat")) {
+                    MessageSender.send(Sender, noOneHeard);
+                }
+            }
+        }
+        return recipients;
     }
 }
