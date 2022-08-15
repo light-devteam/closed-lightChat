@@ -65,9 +65,9 @@ public class Mentions {
                 p.playSound(p.getLocation(), Sound.valueOf(pingSound), pingVolume, pingSpeed);
                 if(message.length() > 0) {
                     if (display.equalsIgnoreCase("hotbar")) {
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                        MessageSender.sendToHotbar(p, message);
                     } else if (display.equalsIgnoreCase("chat")) {
-                        MessageSender.send(p, message);
+                        MessageSender.sendToChat(p, message);
                     }
                 }
                 if(outFormatMarker.length() > 0) {
@@ -79,10 +79,10 @@ public class Mentions {
                 }
             } else if (v.equals(Sender) && v.equals(Name)) {
                 if(display.equalsIgnoreCase("hotbar") && selfReference.length() > 0) {
-                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(selfReference));
+                    MessageSender.sendToHotbar(p, selfReference);
                 }
                 else if(display.equalsIgnoreCase("chat") && selfReference.length() > 0) {
-                    MessageSender.send(p, selfReference);
+                    MessageSender.sendToChat(p, selfReference);
                 }
                 Message = Message.replaceAll("(?<=\\s\\p{Punct}{0,9999}|^\\s{0,9999}\\p{Punct}{0,9999})" + inFormat.replace(placeholder.replace("placeholder", "mentioned"), v.toString()) + "(?=\\p{Punct}*\\s|\\p{Punct}*\\s*$)", outFormatMarker + messageColor);
                 // Костыли                                        ^^^^         ^^^^              ^^^^

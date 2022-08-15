@@ -63,10 +63,10 @@ public class Chat implements CommandExecutor {
         }
         if(prefixError.length() > 0) {
             if (prefixErrorDisplay.equalsIgnoreCase("hotbar")) {
-                Sender.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefixError));
+                MessageSender.sendToHotbar(Sender, prefixError);
             }
             else if (prefixErrorDisplay.equalsIgnoreCase("chat")) {
-                MessageSender.send(Sender, prefixError);
+                MessageSender.sendToChat(Sender, prefixError);
             }
         }
     }
@@ -83,7 +83,7 @@ public class Chat implements CommandExecutor {
 
                 sendingMessage(Message.trim(), PlayerSender, SenderNickname, this.Chat);
             } else {
-                plugin.getLogger().warning("Unable to send private message from console.");
+                plugin.getLogger().warning("Unable to sendToChat private message from console.");
             }
             return true;
         }
@@ -120,24 +120,24 @@ public class Chat implements CommandExecutor {
             if(Mentions) {
                 if(Sender.hasPermission(String.format("lc.chat.%s.mention", Chat))) {
                     for (Player p : recipients) {
-                        MessageSender.send(p, new Mentions().pingEvent(Message, Nickname, p, Format, Color));
+                        MessageSender.sendToChat(p, new Mentions().pingEvent(Message, Nickname, p, Format, Color));
                     }
                 } else {
                     if (noPermsMention.length() > 0) {
-                        MessageSender.send(Sender, noPermsMention);
+                        MessageSender.sendToChat(Sender, noPermsMention);
                     }
                     for (Player p : recipients) {
-                        MessageSender.send(p, MessageFormatter.message(Format, Message, Color));
+                        MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
                     }
                 }
             } else {
                 for (Player p : recipients) {
-                    MessageSender.send(p, MessageFormatter.message(Format, Message, Color));
+                    MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
                 }
             }
         } else {
             if (noPerms.length() > 0) {
-                MessageSender.send(Sender, noPerms);
+                MessageSender.sendToChat(Sender, noPerms);
             }
         }
     }
@@ -177,10 +177,10 @@ public class Chat implements CommandExecutor {
         if(recipients.size() <= 1) {
             if(noOneHeard.length() > 0) {
                 if (noOneHeardDisplay.equalsIgnoreCase("hotbar")) {
-                    Sender.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(noOneHeard));
+                    MessageSender.sendToHotbar(Sender, noOneHeard);
                 }
                 else if (noOneHeardDisplay.equalsIgnoreCase("chat")) {
-                    MessageSender.send(Sender, noOneHeard);
+                    MessageSender.sendToChat(Sender, noOneHeard);
                 }
             }
         }

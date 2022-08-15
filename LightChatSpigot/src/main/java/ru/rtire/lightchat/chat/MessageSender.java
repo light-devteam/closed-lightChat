@@ -1,5 +1,6 @@
 package ru.rtire.lightchat.chat;
 
+import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -14,8 +15,11 @@ public class MessageSender {
         this.plugin = LightChat.getInstance();;
     }
 
-    public void send(Player p, String m) {
-        p.spigot().sendMessage(new TextComponent(ComponentSerializer.parse(new JSONConverter().converter(m))));
+    public void sendToChat(Player p, String m) {
+        p.spigot().sendMessage(transform(m));
+    }
+    public void sendToHotbar(Player p, String m) {
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, transform(m));
     }
     public TextComponent transform(String m) {
         return new TextComponent(ComponentSerializer.parse(new JSONConverter().converter(m)));
