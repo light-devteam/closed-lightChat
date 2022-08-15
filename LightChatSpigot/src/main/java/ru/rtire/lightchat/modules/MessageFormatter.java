@@ -27,7 +27,7 @@ public final class MessageFormatter {
     public String player(String str, Player p, String r) {
         str = unicode(str);
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            str = str.replace(Placeholder.replace("placeholder", r + "Prefix"), plugin.chat.getPlayerPrefix(p)).replace(Placeholder.replace("placeholder", r + "Suffix"), plugin.chat.getPlayerSuffix(p));
+            str = str.replace(Placeholder.replace("placeholder", r + "Prefix"), unicode(plugin.chat.getPlayerPrefix(p))).replace(Placeholder.replace("placeholder", r + "Suffix"), unicode(plugin.chat.getPlayerSuffix(p)));
         }
         return str.replace(Placeholder.replace("placeholder", r), p.getName());
     }

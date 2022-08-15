@@ -43,8 +43,8 @@ public class Chat implements CommandExecutor {
         MessageFormatter MessageFormatter = new MessageFormatter();
         MessageSender MessageSender = new MessageSender();
 
-        String prefixErrorDisplay = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.prefixError.display").trim(), Sender, "sender");
-        String prefixError = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.prefixError.message").trim(), Sender, "sender");
+        String prefixErrorDisplay = MessageFormatter.player(plugin.getConfig().getString("general.chat.prefixError.display").trim(), Sender, "sender");
+        String prefixError = MessageFormatter.player(plugin.getConfig().getString("general.chat.prefixError.message").trim(), Sender, "sender");
 
         HashMap<String, String> Prefixes = new HashMap<>();
         for (String s : new ArrayList<>(plugin.getConfig().getConfigurationSection("chats").getKeys(false))) {
@@ -55,10 +55,8 @@ public class Chat implements CommandExecutor {
             String Prefix = entry.getValue();
             if (ChatEvent.getMessage().startsWith(Prefix)) {
                 Message = Message.substring(Prefix.length(), Message.length());
-                if (Sender == null) {
-                    sendingAnEmulatedMessage(Message, SenderNickname, Chat);
-                } else {
-                    sendingMessage(Message, Sender, SenderNickname, Chat);
+                if(Sender != null) {
+                    sendingMessage(Message.trim(), Sender, SenderNickname, Chat);
                 }
                 return;
             }
@@ -83,7 +81,7 @@ public class Chat implements CommandExecutor {
                 Player PlayerSender = (Player)Sender;
                 String SenderNickname = PlayerSender.getName();
 
-                sendingMessage(Message, PlayerSender, SenderNickname, this.Chat);
+                sendingMessage(Message.trim(), PlayerSender, SenderNickname, this.Chat);
             } else {
                 plugin.getLogger().warning("Unable to send private message from console.");
             }
@@ -152,8 +150,8 @@ public class Chat implements CommandExecutor {
 
         ArrayList<Player> recipients = new ArrayList<Player>();
 
-        String noOneHeardDisplay = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.noOneHeard.display").trim(), Sender, "sender");
-        String noOneHeard = MessageFormatter.player(plugin.getConfig().getString("general.chatSettings.noOneHeard.message").trim(), Sender, "sender");
+        String noOneHeardDisplay = MessageFormatter.player(plugin.getConfig().getString("general.chat.noOneHeard.display").trim(), Sender, "sender");
+        String noOneHeard = MessageFormatter.player(plugin.getConfig().getString("general.chat.noOneHeard.message").trim(), Sender, "sender");
 
         if(Distance <= -2) {
             for (Player p : Bukkit.getOnlinePlayers()) {
