@@ -26,6 +26,7 @@ public class Chat implements CommandExecutor {
 
     public Chat () {
         this.plugin = LightChat.getInstance();
+        economy = plugin.economy;
     }
     public Chat (String Chat) {
         this.plugin = LightChat.getInstance();
@@ -219,7 +220,6 @@ public class Chat implements CommandExecutor {
 
     public static boolean takeMoney(Player p, double amount) {
         if (economy.getBalance(p) < amount) return false;
-
         return economy.withdrawPlayer(p, amount).transactionSuccess();
     }
 }

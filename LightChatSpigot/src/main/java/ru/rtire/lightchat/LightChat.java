@@ -51,6 +51,7 @@ public final class LightChat extends JavaPlugin {
         }
 
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+            setupEconomy();
             setupChat();
         }
     }
@@ -58,11 +59,12 @@ public final class LightChat extends JavaPlugin {
     // @Override
     // public void onDisable() {}
 
-    public void setupEconomy() {
+    public boolean setupEconomy() {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
         if(economyProvider != null) {
-            economy = economyProvider.getProvider();
+            economy = (Economy) economyProvider.getProvider();
         }
+        return economy != null;
     }
     public boolean setupChat() {
         RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(Chat.class);

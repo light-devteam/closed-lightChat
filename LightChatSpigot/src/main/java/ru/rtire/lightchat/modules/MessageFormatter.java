@@ -34,7 +34,7 @@ public final class MessageFormatter {
     }
 
     public String placeholderReplacement(String str, String Placeholder, String replacement) {
-        return str.replace(Placeholder.replace("placeholder", Placeholder), replacement);
+        return str.replace(this.Placeholder.replace("placeholder", Placeholder), replacement);
     }
 
     /*public String prefixes(String str) {
