@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
 
 import ru.rtire.lightchat.chat.ChatListener;
 import ru.rtire.lightchat.modules.MessageFormatter;
@@ -17,6 +18,7 @@ import ru.rtire.lightchat.modules.CommandRegister;
 public final class LightChat extends JavaPlugin {
 
     public static Chat chat = null;
+    public static Economy economy = null;
     private static LightChat instance;
 
     @Override
@@ -56,6 +58,12 @@ public final class LightChat extends JavaPlugin {
     // @Override
     // public void onDisable() {}
 
+    public void setupEconomy() {
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+        if(economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+    }
     public boolean setupChat() {
         RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(Chat.class);
         if (chatProvider != null) {

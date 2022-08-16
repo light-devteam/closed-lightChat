@@ -3,8 +3,8 @@ general:
   format: '&'
   mentions:
     inFormat: '@{mentioned}'
-    outFormat: '{mentionedPrefix}&f{mentioned}'
-    outFormatMarker: '{mentionedPrefix}&f{mentioned}'
+    outFormat: '{json {"text":"{mentionedPrefix}", "color":"white"} }&f{mentioned}'
+    outFormatMarker: '&e{mentionedPrefix}&a{mentioned}'
 
     message:
       # hotbar или chat
@@ -19,10 +19,10 @@ general:
   chat:
     prefixError:
       display: 'chat'
-      message: '{senderPrefix}&f{sender}&a, Ваше сообщение не было отправлено т.к. чат с соответствующим префиксом не был найден.'
+      message: '&e{senderPrefix}&f{sender}&a, Ваше сообщение не было отправлено т.к. чат с соответствующим префиксом не был найден.'
     noOneHeard:
       display: 'hotbar'
-      message: '{senderPrefix}&f{sender}&c, Вас никто не услышал... :('
+      message: '&e{senderPrefix}&f{sender}&c, Вас никто не услышал... :('
 
 
 #  #=#=#=#=#=#=#=#=#=#
@@ -101,7 +101,7 @@ chats:
     prefix: '!'
     distance: -2
     #sender
-    format: '&f&6G&f | {senderPrefix}&6{sender} &6> {message}'
+    format: '&f&6G&f | &e{senderPrefix}&6{sender} &6> {message}'
     color: '&f'
     cooldown: 0
     price: 0
@@ -113,6 +113,9 @@ chats:
     cmdDescription: 'Отправка сообщения в глобальный чат.'
     log: false
     console: false
-    noPerms: '&c{sender}, у Вас нет прав на отправку сообщений в Глобальный чат!'
-    notCooledDown: '&cХей, {sender}! Полегче! Подожди еще {seconds}с, прежде чем отправить сообщение.'
-    noPermsMention: '&c{sender}, у Вас нет прав на упоминание игроков в Глобальном чате!'
+    noPerms: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c!'
+    noPermsCommand: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c при помощи &bкоманды&c!'
+    notCooledDown: '&cХей, &f{senderPrefix}&f{sender}&c! Полегче! Подожди еще &b{seconds}с&c, прежде чем отправить сообщение.'
+    noPermsMention: '&c{sender}, у Вас нет прав на &bупоминание&c игроков в &bГлобальном чате&c!'
+    notEnoughMoney: '&f{senderPrefix}&f{sender}&c, у Вас недостаточно денег для отправки сообщения в Глобальный чат. Цена: &b{price}&c, Ваш баланс: &b{senderBalance}&c.'
+    successfullyPaid: '&f{senderPrefix}&f{sender}&a, Вы успешно оплатили &b{price}&a за объявление. Ваш баланс: &b{senderBalance}&a.'

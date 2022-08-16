@@ -21,15 +21,20 @@ public final class MessageFormatter {
     }
 
     public String message(String str, String Message, String Color) {
-        return unicode(str).replace(Placeholder.replace("placeholder", "message"), unicode(Color) + Message);
+        return placeholderReplacement(unicode(str), "message", unicode(Color) + Message);
     }
 
     public String player(String str, Player p, String r) {
         str = unicode(str);
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            str = str.replace(Placeholder.replace("placeholder", r + "Prefix"), unicode(plugin.chat.getPlayerPrefix(p))).replace(Placeholder.replace("placeholder", r + "Suffix"), unicode(plugin.chat.getPlayerSuffix(p)));
+            str = placeholderReplacement(str, r + "Prefix", unicode(plugin.chat.getPlayerPrefix(p)));
+            str = placeholderReplacement(str, r + "Suffix", unicode(plugin.chat.getPlayerSuffix(p)));
         }
-        return str.replace(Placeholder.replace("placeholder", r), p.getName());
+        return placeholderReplacement(str, r, p.getName());
+    }
+
+    public String placeholderReplacement(String str, String Placeholder, String replacement) {
+        return str.replace(Placeholder.replace("placeholder", Placeholder), replacement);
     }
 
     /*public String prefixes(String str) {

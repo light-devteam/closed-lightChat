@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.milkbowl.vault.economy.Economy;
+
 import ru.rtire.lightchat.LightChat;
 import ru.rtire.lightchat.api.ChatEvent;
 import ru.rtire.lightchat.modules.MessageFormatter;
@@ -20,26 +22,28 @@ import ru.rtire.lightchat.modules.MessageFormatter;
 public class Chat implements CommandExecutor {
     private LightChat plugin;
     private String Chat;
+    private static Economy economy;
 
-    public Chat() {
+    public Chat () {
         this.plugin = LightChat.getInstance();
     }
-    public Chat(String Chat) {
+    public Chat (String Chat) {
         this.plugin = LightChat.getInstance();
         this.Chat = Chat;
+        economy = plugin.economy;
     }
 
-    public void chatCaller(AsyncPlayerChatEvent e) {
+    public void chatCaller (AsyncPlayerChatEvent e) {
         String Message = e.getMessage();
         Player Sender = e.getPlayer();
         String SenderNickname = Sender.getName();
         chatDefinition(Message, Sender, SenderNickname);
     }
-    public void chatCaller(String Message, String SenderNickname) {
+    public void chatCaller (String Message, String SenderNickname) {
         chatDefinition(Message, null, SenderNickname);
     }
 
-    private void chatDefinition(String Message, Player Sender, String SenderNickname) {
+    private void chatDefinition (String Message, Player Sender, String SenderNickname) {
         MessageFormatter MessageFormatter = new MessageFormatter();
         MessageSender MessageSender = new MessageSender();
 
@@ -55,13 +59,13 @@ public class Chat implements CommandExecutor {
             String Prefix = entry.getValue();
             if (ChatEvent.getMessage().startsWith(Prefix)) {
                 Message = Message.substring(Prefix.length(), Message.length());
-                if(Sender != null) {
+                if (Sender != null) {
                     sendingMessage(Message.trim(), Sender, SenderNickname, Chat);
                 }
                 return;
             }
         }
-        if(prefixError.length() > 0) {
+        if (prefixError.length() > 0) {
             if (prefixErrorDisplay.equalsIgnoreCase("hotbar")) {
                 MessageSender.sendToHotbar(Sender, prefixError);
             }
@@ -71,30 +75,36 @@ public class Chat implements CommandExecutor {
         }
     }
 
-    public boolean onCommand(CommandSender Sender, Command cmd, String label, String[] args) {
-        if(args.length >= 1) {
-            if (Sender instanceof Player) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < args.length; i++) sb.append(args[i]).append(" ");
-                if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
-                String Message = sb.toString().trim();
-                Player PlayerSender = (Player)Sender;
-                String SenderNickname = PlayerSender.getName();
+    public boolean onCommand (CommandSender Sender, Command cmd, String label, String[] args) {
+        if (Sender instanceof Player) {
+            String noPermsCommand = new MessageFormatter().player(plugin.getConfig().getString(String.format("chats.%s.noPermsCommand")).trim(), (Player) Sender, "sender");
+            if (Sender.hasPermission(String.format("lc.chat.%s.command", this.Chat))) {
+                if (args.length >= 1) {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < args.length; i++) sb.append(args[i]).append(" ");
+                    if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
+                    String Message = sb.toString().trim();
+                    Player PlayerSender = (Player) Sender;
+                    String SenderNickname = PlayerSender.getName();
 
-                sendingMessage(Message.trim(), PlayerSender, SenderNickname, this.Chat);
+                    sendingMessage(Message.trim(), PlayerSender, SenderNickname, this.Chat);
+                } else {
+                    return false;
+                }
             } else {
-                plugin.getLogger().warning("Unable to sendToChat private message from console.");
+                new MessageSender().sendToChat((Player) Sender, noPermsCommand);
             }
-            return true;
+        } else {
+            plugin.getLogger().warning("Unable to sendToChat private message from console.");
         }
-        return false;
+        return true;
     }
 
-    private void sendingAnEmulatedMessage(String Message, String SenderNickname, String Chat) {
+    private void sendingAnEmulatedMessage (String Message, String SenderNickname, String Chat) {
         // ...
     }
 
-    private void sendingMessage(String Message, Player Sender, String SenderNickname, String Chat) {
+    private void sendingMessage (String Message, Player Sender, String SenderNickname, String Chat) {
         MessageFormatter MessageFormatter = new MessageFormatter();
         MessageSender MessageSender = new MessageSender();
 
@@ -108,36 +118,56 @@ public class Chat implements CommandExecutor {
         Boolean Log = plugin.getConfig().getBoolean(String.format("chats.%s.log", Chat));
         Boolean Console = plugin.getConfig().getBoolean(String.format("chats.%s.console", Chat));
 
-        int cooldown = plugin.getConfig().getInt(String.format("chats.%s.cooldown", Chat));
-        int price = plugin.getConfig().getInt(String.format("chats.%s.price", Chat));
+        int Cooldown = plugin.getConfig().getInt(String.format("chats.%s.cooldown", Chat));
+        double Price = plugin.getConfig().getDouble(String.format("chats.%s.price", Chat));
 
         String noPerms = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPerms", Chat)).trim(), Sender, "sender");
         String notCooledDown = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.notCooledDown", Chat)).trim(), Sender, "sender");
         String noPermsMention = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPermsMention", Chat)).trim(), Sender, "sender");
+        String noPermsCommand = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPermsCommand", Chat)).trim(), Sender, "sender");
+        String notEnoughMoney = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.notEnoughMoney", Chat)).trim(), Sender, "sender");
+            notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "price", Double.toString(Price));
+        String successfullyPaid = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.successfullyPaid", Chat)).trim(), Sender, "sender");
+            successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "price", Double.toString(Price));
 
-        if(Sender.hasPermission(String.format("lc.chat.%s.write", Chat))) {
-            ArrayList<Player> recipients = recipientsList(Distance, Sender, Chat);
-            if(Mentions) {
-                if(Sender.hasPermission(String.format("lc.chat.%s.mention", Chat))) {
-                    for (Player p : recipients) {
-                        MessageSender.sendToChat(p, new Mentions().pingEvent(Message, Nickname, p, Format, Color));
+        Boolean transaction = true;
+        if(this.economy != null) {
+            notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "senderBalance", Double.toString(economy.getBalance(Sender)));
+            transaction = takeMoney(Sender, Price);
+            successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "senderBalance", Double.toString(economy.getBalance(Sender)));
+        }
+        if(transaction) {
+            if(successfullyPaid.length() > 0 && Price > 0) {
+                MessageSender.sendToChat(Sender, successfullyPaid);
+            }
+            if (Sender.hasPermission(String.format("lc.chat.%s.write", Chat))) {
+                ArrayList<Player> recipients = recipientsList(Distance, Sender, Chat);
+                if (Mentions) {
+                    if (Sender.hasPermission(String.format("lc.chat.%s.mention", Chat))) {
+                        for (Player p : recipients) {
+                            MessageSender.sendToChat(p, new Mentions().pingEvent(Message, Nickname, p, Format, Color));
+                        }
+                    } else {
+                        if (noPermsMention.length() > 0) {
+                            MessageSender.sendToChat(Sender, noPermsMention);
+                        }
+                        for (Player p : recipients) {
+                            MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
+                        }
                     }
                 } else {
-                    if (noPermsMention.length() > 0) {
-                        MessageSender.sendToChat(Sender, noPermsMention);
-                    }
                     for (Player p : recipients) {
                         MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
                     }
                 }
             } else {
-                for (Player p : recipients) {
-                    MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
+                if (noPerms.length() > 0) {
+                    MessageSender.sendToChat(Sender, noPerms);
                 }
             }
         } else {
-            if (noPerms.length() > 0) {
-                MessageSender.sendToChat(Sender, noPerms);
+            if(notEnoughMoney.length() > 0 && Price > 0) {
+                MessageSender.sendToChat(Sender, notEnoughMoney);
             }
         }
     }
@@ -153,29 +183,29 @@ public class Chat implements CommandExecutor {
         String noOneHeardDisplay = MessageFormatter.player(plugin.getConfig().getString("general.chat.noOneHeard.display").trim(), Sender, "sender");
         String noOneHeard = MessageFormatter.player(plugin.getConfig().getString("general.chat.noOneHeard.message").trim(), Sender, "sender");
 
-        if(Distance <= -2) {
+        if (Distance <= -2) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if(p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
+                if (p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
                     recipients.add(p);
                 }
             }
         }
-        else if(Distance == -1) {
+        else if (Distance == -1) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if(p.getWorld().equals(Sender.getWorld()) && p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
+                if (p.getWorld().equals(Sender.getWorld()) && p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
                     recipients.add(p);
                 }
             }
         }
         else if(Distance >= 0) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if(p.getWorld().equals(Sender.getWorld()) && p.getLocation().distance(Sender.getLocation()) <= Distance && p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
+                if (p.getWorld().equals(Sender.getWorld()) && p.getLocation().distance(Sender.getLocation()) <= Distance && p.hasPermission(String.format("lc.chat.%s.see", Chat))) {
                     recipients.add(p);
                 }
             }
         }
-        if(recipients.size() <= 1) {
-            if(noOneHeard.length() > 0) {
+        if (recipients.size() <= 1) {
+            if (noOneHeard.length() > 0) {
                 if (noOneHeardDisplay.equalsIgnoreCase("hotbar")) {
                     MessageSender.sendToHotbar(Sender, noOneHeard);
                 }
@@ -185,5 +215,11 @@ public class Chat implements CommandExecutor {
             }
         }
         return recipients;
+    }
+
+    public static boolean takeMoney(Player p, double amount) {
+        if (economy.getBalance(p) < amount) return false;
+
+        return economy.withdrawPlayer(p, amount).transactionSuccess();
     }
 }
