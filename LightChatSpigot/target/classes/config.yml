@@ -17,6 +17,8 @@ general:
       volume: '10'
       pitch: '1'
   chat:
+    # Логирование чатов в отдельные файлы
+    logToSepFiles: true
     prefixError:
       display: 'chat'
       message: '&e{senderPrefix}&f{sender}&a, Ваше сообщение не было отправлено т.к. чат с соответствующим префиксом не был найден.'

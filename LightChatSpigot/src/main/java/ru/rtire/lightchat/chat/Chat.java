@@ -1,5 +1,7 @@
 package ru.rtire.lightchat.chat;
 
+import java.io.*;
+
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -131,6 +133,12 @@ public class Chat implements CommandExecutor {
         String successfullyPaid = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.successfullyPaid", Chat)).trim(), Sender, "sender");
             successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "price", Double.toString(Price));
 
+        String location = LightChat.getJarDirectory();
+        File dir = new File(location + File.separator + "logs");
+        File file = new File(dir + File.separator + "logs.txt");
+        File chatsDir = new File(dir + File.separator + "chats");
+        File chatFile = new File(chatsDir + File.separator + String.format("%s.txt", Chat));
+
         Boolean transaction = true;
         if(this.economy != null) {
             notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "senderBalance", Double.toString(economy.getBalance(Sender)));
@@ -161,6 +169,8 @@ public class Chat implements CommandExecutor {
                         MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
                     }
                 }
+                new Chat().Logger(Log, dir, file, chatsDir, chatFile);
+
             } else {
                 if (noPerms.length() > 0) {
                     MessageSender.sendToChat(Sender, noPerms);
@@ -173,6 +183,24 @@ public class Chat implements CommandExecutor {
         }
     }
 
+    public void Logger(Boolean Log, File dir, File file, File chatsDir, File chatFile) {
+        try {
+            if (Log) {
+                if (dir.exists() && file.exists()) {
+                    BufferedWriter BufferedWriter = new BufferedWriter(new FileWriter(file, true));
+
+                    // write
+
+                    BufferedWriter.flush();
+                    BufferedWriter.close();
+                } else {
+                    new LightChat().setupLogFile(dir, file);
+                    Logger(Log, dir, file, chatsDir, chatFile);
+                }
+            }
+            return;
+        } catch(Exception e) {}
+    }
 
 
     public ArrayList recipientsList(Float Distance, Player Sender, String Chat) {
