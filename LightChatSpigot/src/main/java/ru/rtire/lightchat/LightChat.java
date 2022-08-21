@@ -49,11 +49,12 @@ public final class LightChat extends JavaPlugin {
 
             Boolean Log = getConfig().getBoolean(String.format("chats.%s.log", Chat));
 
+            System.out.println(Log);
             if(Log) {
                 try {
                     String location = new File(LightChat.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
                     JarDirectory = location;
-                    File dir = new File(location + File.separator + "logs");
+                    File dir = new File(location + File.separator + getDescription().getName() + File.separator + "logs");
                     File file = new File(dir + File.separator + "logs.txt");
                     File chatsDir = new File(dir + File.separator + "chats");
                     File chatFile = new File(chatsDir + File.separator + String.format("%s.txt", Chat));
@@ -62,7 +63,9 @@ public final class LightChat extends JavaPlugin {
                     if(logToSepFiles) {
                         setupLogFile(chatsDir, chatFile);
                     }
-                } catch(Exception e) {}
+                } catch(Exception e) {
+                    System.out.println(e);
+                }
             }
 
             for (int i = 0; i < commands.length; i++) {
@@ -93,13 +96,15 @@ public final class LightChat extends JavaPlugin {
         }
         return chat != null;
     }
-    public void setupLogFile(File dir, File file) throws Exception {
-        if(!dir.exists()) {
-            dir.mkdir();
-        }
-        if(!file.exists()) {
-            file.createNewFile();
-        }
+    public void setupLogFile(File dir, File file) {
+        try {
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch(Exception e) {}
     }
 
     public static LightChat getInstance() { return instance; }

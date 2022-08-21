@@ -134,7 +134,7 @@ public class Chat implements CommandExecutor {
             successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "price", Double.toString(Price));
 
         String location = LightChat.getJarDirectory();
-        File dir = new File(location + File.separator + "logs");
+        File dir = new File(location + File.separator + plugin.getDescription().getName() + File.separator + "logs");
         File file = new File(dir + File.separator + "logs.txt");
         File chatsDir = new File(dir + File.separator + "chats");
         File chatFile = new File(chatsDir + File.separator + String.format("%s.txt", Chat));
@@ -169,7 +169,7 @@ public class Chat implements CommandExecutor {
                         MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
                     }
                 }
-                new Chat().Logger(Log, dir, file, chatsDir, chatFile);
+                new Chat().Logger(Log, dir, file, chatsDir, chatFile, MessageSender.transform(MessageFormatter.message(Format, Message, Color)).toString());
 
             } else {
                 if (noPerms.length() > 0) {
@@ -183,19 +183,35 @@ public class Chat implements CommandExecutor {
         }
     }
 
-    public void Logger(Boolean Log, File dir, File file, File chatsDir, File chatFile) {
+    public void Logger(Boolean Log, File dir, File file, File chatsDir, File chatFile, String message) {
+        Boolean logToSepFiles = plugin.getConfig().getBoolean("general.chat.logToSepFiles");
         try {
             if (Log) {
                 if (dir.exists() && file.exists()) {
-                    BufferedWriter BufferedWriter = new BufferedWriter(new FileWriter(file, true));
+                    BufferedWriter allChatsLogFile = new BufferedWriter(new FileWriter(file, true));
 
                     // write
+                    allChatsLogFile.write(message);
 
-                    BufferedWriter.flush();
-                    BufferedWriter.close();
+                    if(logToSepFiles) {
+                        if(chatsDir.exists() && chatFile.exists()) {
+                            BufferedWriter chatLogFile = new BufferedWriter(new FileWriter(chatFile, true));
+
+                            // write
+                            chatLogFile.write(message);
+
+                            chatLogFile.flush();
+                            chatLogFile.close();
+                        } else {
+                            new LightChat().setupLogFile(dir, file);
+                            Logger(Log, dir, file, chatsDir, chatFile, message);
+                        }
+                    }
+                    allChatsLogFile.flush();
+                    allChatsLogFile.close();
                 } else {
                     new LightChat().setupLogFile(dir, file);
-                    Logger(Log, dir, file, chatsDir, chatFile);
+                    Logger(Log, dir, file, chatsDir, chatFile, message);
                 }
             }
             return;
