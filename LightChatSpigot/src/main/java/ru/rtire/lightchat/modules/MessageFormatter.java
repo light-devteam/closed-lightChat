@@ -23,12 +23,23 @@ public final class MessageFormatter {
     public String message(String str, String Message, String Color) {
         return placeholderReplacement(unicode(str), "message", unicode(Color) + Message);
     }
+    public String message(String str, String Message) {
+        return placeholderReplacement(str, "message", Message);
+    }
 
     public String player(String str, Player p, String r) {
         str = unicode(str);
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
             str = placeholderReplacement(str, r + "Prefix", unicode(plugin.chat.getPlayerPrefix(p)));
             str = placeholderReplacement(str, r + "Suffix", unicode(plugin.chat.getPlayerSuffix(p)));
+        }
+        return placeholderReplacement(str, r, p.getName());
+    }
+    public String player(String str, Player p, String r, boolean unicode) {
+        if(!unicode) { return new MessageFormatter().player(str, p, r); }
+        if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+            str = placeholderReplacement(str, r + "Prefix", plugin.chat.getPlayerPrefix(p));
+            str = placeholderReplacement(str, r + "Suffix", plugin.chat.getPlayerSuffix(p));
         }
         return placeholderReplacement(str, r, p.getName());
     }

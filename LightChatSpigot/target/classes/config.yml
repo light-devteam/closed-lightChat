@@ -1,6 +1,9 @@
 general:
   placeholder: '{placeholder}'
   format: '&'
+  # часовая зона от GMT
+  # вернет часовую зону по GMT, если выдаст ошибку
+  timeZone: 'GMT+3:00'
   mentions:
     inFormat: '@{mentioned}'
     outFormat: '{json {"text":"{mentionedPrefix}", "color":"white"} }&f{mentioned}'
@@ -113,7 +116,10 @@ chats:
     cmdUsage: '&aДля отправки сообщения в чат используйте &l&b/{command} <message>&a, либо напишите "&b{chatPrefix}&a" перед сообщением.'
     # без json, только цвета
     cmdDescription: 'Отправка сообщения в глобальный чат.'
-    log: false
+    fileLog:
+      enable: true
+      # sender, message, time
+      format: '{time}'
     console: false
     noPerms: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c!'
     noPermsCommand: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c при помощи &bкоманды&c!'

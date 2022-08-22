@@ -3,6 +3,7 @@ package ru.rtire.lightchat;
 import java.util.*;
 import java.lang.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +30,10 @@ public final class LightChat extends JavaPlugin {
         String placeholder = getConfig().getString("general.placeholder");
         Boolean logToSepFiles = getConfig().getBoolean("general.chat.logToSepFiles");
         MessageFormatter MessageFormatter = new MessageFormatter();
+        Calendar calendar = new GregorianCalendar();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String TZone = getConfig().getString(String.format("general.timeZone")).trim();
+        calendar.setTimeZone(TimeZone.getTimeZone(TZone));
 
         File config = new File(getDataFolder() + File.separator + "src/main/resources/config.yml");
         if(!config.exists()) {
@@ -47,17 +52,16 @@ public final class LightChat extends JavaPlugin {
                 cmdUsage = cmdUsage.replace(placeholder.replace("placeholder", "chatPrefix"), prefix);
             String cmdDescription = getConfig().getString(String.format("chats.%s.cmdDescription", Chat)).trim();
 
-            Boolean Log = getConfig().getBoolean(String.format("chats.%s.log", Chat));
+            Boolean Log = getConfig().getBoolean(String.format("chats.%s.fileLog.enable", Chat));
 
-            System.out.println(Log);
             if(Log) {
                 try {
                     String location = new File(LightChat.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
                     JarDirectory = location;
                     File dir = new File(location + File.separator + getDescription().getName() + File.separator + "logs");
-                    File file = new File(dir + File.separator + "logs.txt");
-                    File chatsDir = new File(dir + File.separator + "chats");
-                    File chatFile = new File(chatsDir + File.separator + String.format("%s.txt", Chat));
+                    File file = new File(dir + File.separator + formatter.format(calendar.getTime()) + ".log");
+                    File chatsDir = new File(dir + File.separator + "chats" + File.separator + Chat);
+                    File chatFile = new File(chatsDir + File.separator + formatter.format(calendar.getTime()) + ".log");
 
                     setupLogFile(dir, file);
                     if(logToSepFiles) {

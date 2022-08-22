@@ -2,8 +2,6 @@ package ru.rtire.lightchat.chat;
 
 import java.io.*;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -11,9 +9,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -98,7 +95,7 @@ public class Chat implements CommandExecutor {
                 new MessageSender().sendToChat((Player) Sender, noPermsCommand);
             }
         } else {
-            plugin.getLogger().warning("Unable to sendToChat private message from console.");
+            plugin.getLogger().warning("Unable to send message from console.");
         }
         return true;
     }
@@ -118,7 +115,7 @@ public class Chat implements CommandExecutor {
         Float Distance = Float.parseFloat(plugin.getConfig().getString(String.format("chats.%s.distance", Chat)).trim());
 
         Boolean Mentions = plugin.getConfig().getBoolean(String.format("chats.%s.mentions", Chat));
-        Boolean Log = plugin.getConfig().getBoolean(String.format("chats.%s.log", Chat));
+        Boolean Log = plugin.getConfig().getBoolean(String.format("chats.%s.fileLog.enable", Chat));
         Boolean Console = plugin.getConfig().getBoolean(String.format("chats.%s.console", Chat));
 
         int Cooldown = plugin.getConfig().getInt(String.format("chats.%s.cooldown", Chat));
@@ -132,12 +129,6 @@ public class Chat implements CommandExecutor {
             notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "price", Double.toString(Price));
         String successfullyPaid = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.successfullyPaid", Chat)).trim(), Sender, "sender");
             successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "price", Double.toString(Price));
-
-        String location = LightChat.getJarDirectory();
-        File dir = new File(location + File.separator + plugin.getDescription().getName() + File.separator + "logs");
-        File file = new File(dir + File.separator + "logs.txt");
-        File chatsDir = new File(dir + File.separator + "chats");
-        File chatFile = new File(chatsDir + File.separator + String.format("%s.txt", Chat));
 
         Boolean transaction = true;
         if(this.economy != null) {
@@ -169,7 +160,11 @@ public class Chat implements CommandExecutor {
                         MessageSender.sendToChat(p, MessageFormatter.message(Format, Message, Color));
                     }
                 }
-                new Chat().Logger(Log, dir, file, chatsDir, chatFile, MessageSender.transform(MessageFormatter.message(Format, Message, Color)).toString());
+                if(Log) {
+                    String LogFormat = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.fileLog.format", Chat)).trim(), Sender, "sender", true);
+                    LogFormat = MessageFormatter.message(LogFormat, Message);
+                    new Chat().Logger(Chat, LogFormat, Log);
+                }
 
             } else {
                 if (noPerms.length() > 0) {
@@ -183,35 +178,48 @@ public class Chat implements CommandExecutor {
         }
     }
 
-    public void Logger(Boolean Log, File dir, File file, File chatsDir, File chatFile, String message) {
-        Boolean logToSepFiles = plugin.getConfig().getBoolean("general.chat.logToSepFiles");
+    public void Logger(String Chat, String Message, Boolean Log) {
         try {
             if (Log) {
+                Calendar calendar = new GregorianCalendar();
+                SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat TimeFormatter = new SimpleDateFormat("HH:mm:ss:SSSS");
+                String TZone = plugin.getConfig().getString(String.format("general.timeZone")).trim();
+                calendar.setTimeZone(TimeZone.getTimeZone(TZone));
+
+                String location = LightChat.getJarDirectory();
+                File dir = new File(location + File.separator + plugin.getDescription().getName() + File.separator + "logs");
+                File file = new File(dir + File.separator + DateFormatter.format(calendar.getTime()) + ".log");
+                File chatsDir = new File(dir + File.separator + "chats" + File.separator + Chat);
+                File chatFile = new File(chatsDir + File.separator + DateFormatter.format(calendar.getTime()) + ".log");
+
+                Boolean logToSepFiles = plugin.getConfig().getBoolean("general.chat.logToSepFiles");
+
+                Message = new MessageFormatter().placeholderReplacement(Message, "time", TimeFormatter.format(calendar.getTime())) + "\n";
+
                 if (dir.exists() && file.exists()) {
                     BufferedWriter allChatsLogFile = new BufferedWriter(new FileWriter(file, true));
 
-                    // write
-                    allChatsLogFile.write(message);
+                    allChatsLogFile.write(Message);
 
                     if(logToSepFiles) {
                         if(chatsDir.exists() && chatFile.exists()) {
                             BufferedWriter chatLogFile = new BufferedWriter(new FileWriter(chatFile, true));
 
-                            // write
-                            chatLogFile.write(message);
+                            chatLogFile.write(Message);
 
                             chatLogFile.flush();
                             chatLogFile.close();
                         } else {
                             new LightChat().setupLogFile(dir, file);
-                            Logger(Log, dir, file, chatsDir, chatFile, message);
+                            Logger(Chat, Message, Log);
                         }
                     }
                     allChatsLogFile.flush();
                     allChatsLogFile.close();
                 } else {
                     new LightChat().setupLogFile(dir, file);
-                    Logger(Log, dir, file, chatsDir, chatFile, message);
+                    Logger(Chat, Message, Log);
                 }
             }
             return;
