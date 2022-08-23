@@ -119,7 +119,7 @@ chats:
     fileLog:
       enable: true
       # sender, message, time
-      format: '{time}'
+      format: '[{time}] [G]  {sender} >>> {message}'
     console: false
     noPerms: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c!'
     noPermsCommand: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c при помощи &bкоманды&c!'

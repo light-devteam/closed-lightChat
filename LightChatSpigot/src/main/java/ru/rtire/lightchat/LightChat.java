@@ -31,9 +31,9 @@ public final class LightChat extends JavaPlugin {
         Boolean logToSepFiles = getConfig().getBoolean("general.chat.logToSepFiles");
         MessageFormatter MessageFormatter = new MessageFormatter();
         Calendar calendar = new GregorianCalendar();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String TZone = getConfig().getString(String.format("general.timeZone")).trim();
-        calendar.setTimeZone(TimeZone.getTimeZone(TZone));
+        DateFormatter.setTimeZone(TimeZone.getTimeZone(TZone));
 
         File config = new File(getDataFolder() + File.separator + "src/main/resources/config.yml");
         if(!config.exists()) {
@@ -59,9 +59,9 @@ public final class LightChat extends JavaPlugin {
                     String location = new File(LightChat.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
                     JarDirectory = location;
                     File dir = new File(location + File.separator + getDescription().getName() + File.separator + "logs");
-                    File file = new File(dir + File.separator + formatter.format(calendar.getTime()) + ".log");
+                    File file = new File(dir + File.separator + DateFormatter.format(calendar.getTime()) + ".log");
                     File chatsDir = new File(dir + File.separator + "chats" + File.separator + Chat);
-                    File chatFile = new File(chatsDir + File.separator + formatter.format(calendar.getTime()) + ".log");
+                    File chatFile = new File(chatsDir + File.separator + DateFormatter.format(calendar.getTime()) + ".log");
 
                     setupLogFile(dir, file);
                     if(logToSepFiles) {

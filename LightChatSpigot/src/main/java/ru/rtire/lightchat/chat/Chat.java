@@ -185,7 +185,8 @@ public class Chat implements CommandExecutor {
                 SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd");
                 SimpleDateFormat TimeFormatter = new SimpleDateFormat("HH:mm:ss:SSSS");
                 String TZone = plugin.getConfig().getString(String.format("general.timeZone")).trim();
-                calendar.setTimeZone(TimeZone.getTimeZone(TZone));
+                TimeFormatter.setTimeZone(TimeZone.getTimeZone(TZone));
+                DateFormatter.setTimeZone(TimeZone.getTimeZone(TZone));
 
                 String location = LightChat.getJarDirectory();
                 File dir = new File(location + File.separator + plugin.getDescription().getName() + File.separator + "logs");
@@ -211,7 +212,7 @@ public class Chat implements CommandExecutor {
                             chatLogFile.flush();
                             chatLogFile.close();
                         } else {
-                            new LightChat().setupLogFile(dir, file);
+                            new LightChat().setupLogFile(chatsDir, chatFile);
                             Logger(Chat, Message, Log);
                         }
                     }
