@@ -119,8 +119,10 @@ chats:
     fileLog:
       enable: true
       # sender, message, time
-      format: '[{time}] [G]  {sender} >>> {message}'
-    console: false
+      format: '[{time}][G]  {sender} >>> {message}'
+    consoleLog:
+      enable: true
+      format: '[G] {sender} >>> {message}'
     noPerms: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c!'
     noPermsCommand: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c при помощи &bкоманды&c!'
     notCooledDown: '&cХей, &f{senderPrefix}&f{sender}&c! Полегче! Подожди еще &b{seconds}с&c, прежде чем отправить сообщение.'
