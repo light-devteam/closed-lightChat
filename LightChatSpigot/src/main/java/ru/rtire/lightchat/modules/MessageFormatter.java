@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.rtire.lightchat.LightChat;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+
 public final class MessageFormatter {
 
     private static LightChat plugin;
@@ -33,6 +35,9 @@ public final class MessageFormatter {
             str = placeholderReplacement(str, r + "Prefix", unicode(plugin.chat.getPlayerPrefix(p)));
             str = placeholderReplacement(str, r + "Suffix", unicode(plugin.chat.getPlayerSuffix(p)));
         }
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            str = PlaceholderAPIReplace(str, p);
+        }
         return placeholderReplacement(str, r, p.getName());
     }
     public String player(String str, Player p, String r, boolean unicode) {
@@ -41,6 +46,9 @@ public final class MessageFormatter {
             str = placeholderReplacement(str, r + "Prefix", plugin.chat.getPlayerPrefix(p));
             str = placeholderReplacement(str, r + "Suffix", plugin.chat.getPlayerSuffix(p));
         }
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            str = PlaceholderAPIReplace(str, p);
+        }
         return placeholderReplacement(str, r, p.getName());
     }
 
@@ -48,10 +56,7 @@ public final class MessageFormatter {
         return str.replace(this.Placeholder.replace("placeholder", Placeholder), replacement);
     }
 
-    /*public String prefixes(String str) {
-        str = unicode(str);
-        return str.replace(Placeholder.replace("placeholder", "globalChatPrefix"), plugin.getConfig().getString("chats.globalChat.prefix"))
-                .replace(Placeholder.replace("placeholder", "localChatPrefix"), plugin.getConfig().getString("chats.localChat.prefix"))
-                .replace(Placeholder.replace("placeholder", "worldChatPrefix"), plugin.getConfig().getString("chats.worldChat.prefix"));
-    }*/
+    public String PlaceholderAPIReplace(String str, Player p) {
+        return PlaceholderAPI.setPlaceholders(p, str);
+    }
 }
