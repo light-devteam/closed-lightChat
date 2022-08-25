@@ -13,8 +13,8 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 
 import ru.rtire.lightchat.chat.ChatListener;
-import ru.rtire.lightchat.modules.MessageFormatter;
-import ru.rtire.lightchat.modules.CommandRegister;
+import ru.rtire.lightchat.chat.modules.MessageFormatter;
+import ru.rtire.lightchat.utils.CommandRegister;
 
 public final class LightChat extends JavaPlugin {
 
