@@ -14,12 +14,12 @@ import net.milkbowl.vault.economy.Economy;
 
 import ru.rtire.lightchat.chat.ChatListener;
 import ru.rtire.lightchat.chat.modules.MessageFormatter;
+import ru.rtire.lightchat.chat.modules.Logger;
 import ru.rtire.lightchat.utils.CommandRegister;
+import ru.rtire.lightchat.dependencies.Vault;
 
 public final class LightChat extends JavaPlugin {
 
-    public static Chat chat = null;
-    public static Economy economy = null;
     private static LightChat instance;
     private static String JarDirectory;
 
@@ -27,9 +27,10 @@ public final class LightChat extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        MessageFormatter MessageFormatter = new MessageFormatter();
+
         String placeholder = getConfig().getString("general.placeholder");
         Boolean logToSepFiles = getConfig().getBoolean("general.chat.logToSepFiles");
-        MessageFormatter MessageFormatter = new MessageFormatter();
         Calendar calendar = new GregorianCalendar();
         SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String TZone = getConfig().getString("general.timeZone").trim();
@@ -63,9 +64,9 @@ public final class LightChat extends JavaPlugin {
                     File chatsDir = new File(dir + File.separator + "chats" + File.separator + Chat);
                     File chatFile = new File(chatsDir + File.separator + DateFormatter.format(calendar.getTime()) + ".txt");
 
-                    setupLogFile(dir, file);
+                    Logger.setupFile(dir, file);
                     if(logToSepFiles) {
-                        setupLogFile(chatsDir, chatFile);
+                        Logger.setupFile(chatsDir, chatFile);
                     }
                 } catch(Exception e) {
                     System.out.println(e);
@@ -78,38 +79,13 @@ public final class LightChat extends JavaPlugin {
         }
 
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            setupEconomy();
-            setupChat();
+            Vault.setupEconomy();
+            Vault.setupChat();
         }
     }
 
     @Override
     public void onDisable() {}
-
-    public boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-        if(economyProvider != null) {
-            economy = (Economy) economyProvider.getProvider();
-        }
-        return economy != null;
-    }
-    public boolean setupChat() {
-        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(Chat.class);
-        if (chatProvider != null) {
-            chat = (Chat) chatProvider.getProvider();
-        }
-        return chat != null;
-    }
-    public void setupLogFile(File dir, File file) {
-        try {
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-        } catch(Exception e) {}
-    }
 
     public static LightChat getInstance() { return instance; }
     public static String getJarDirectory() { return JarDirectory; }

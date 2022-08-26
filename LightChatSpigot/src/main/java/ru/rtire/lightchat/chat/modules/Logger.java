@@ -52,14 +52,14 @@ public class Logger {
                         chatLogFile.flush();
                         chatLogFile.close();
                     } else {
-                        new LightChat().setupLogFile(chatsDir, chatFile);
+                        setupFile(chatsDir, chatFile);
                         fileLogger(LogFormat);
                     }
                 }
                 allChatsLogFile.flush();
                 allChatsLogFile.close();
             } else {
-                new LightChat().setupLogFile(dir, file);
+                setupFile(dir, file);
                 fileLogger(LogFormat);
             }
             return;
@@ -76,6 +76,17 @@ public class Logger {
             LogFormat = new MessageFormatter().placeholderReplacement(LogFormat, "time", TimeFormatter.format(calendar.getTime()));
 
             Bukkit.getLogger().info(LogFormat);
+        } catch(Exception e) {}
+    }
+
+    public static void setupFile(File dir, File file) {
+        try {
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
         } catch(Exception e) {}
     }
 }

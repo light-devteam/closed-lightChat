@@ -9,28 +9,28 @@ import org.bukkit.command.CommandSender;
 
 import java.util.*;
 
-import net.milkbowl.vault.economy.Economy;
-
 import ru.rtire.lightchat.LightChat;
 import ru.rtire.lightchat.chat.modules.Mentions;
 import ru.rtire.lightchat.chat.modules.MessageFormatter;
 import ru.rtire.lightchat.chat.modules.MessageSender;
 import ru.rtire.lightchat.chat.modules.Logger;
+import ru.rtire.lightchat.chat.modules.Economy;
 import ru.rtire.lightchat.api.ChatEvent;
+import ru.rtire.lightchat.dependencies.Vault;
 
 public class Chat implements CommandExecutor {
     private LightChat plugin;
     private String Chat;
-    private static Economy economy;
+    private static net.milkbowl.vault.economy.Economy economy;
 
     public Chat () {
         this.plugin = LightChat.getInstance();
-        economy = plugin.economy;
+        economy = Vault.economy;
     }
     public Chat (String Chat) {
         this.plugin = LightChat.getInstance();
         this.Chat = Chat;
-        economy = plugin.economy;
+        economy = Vault.economy;
     }
 
     public void chatCaller (AsyncPlayerChatEvent e) {
@@ -38,10 +38,10 @@ public class Chat implements CommandExecutor {
         Player Sender = e.getPlayer();
         String SenderNickname = Sender.getName();
         String Chat = ChatDefinition.definition();
-        String Prefix = plugin.getConfig().getString(String.format("chats.%s.prefix", Chat)).trim();
-        Message = Message.substring(Prefix.length(), Message.length());
         if (Sender != null) {
             if(Chat != null) {
+                String Prefix = plugin.getConfig().getString(String.format("chats.%s.prefix", Chat)).trim();
+                Message = Message.substring(Prefix.length(), Message.length());
                 sendingMessage(Message.trim(), Sender, SenderNickname, Chat);
             } else {
                 MessageFormatter MessageFormatter = new MessageFormatter();
@@ -120,7 +120,7 @@ public class Chat implements CommandExecutor {
         Boolean transaction = true;
         if(this.economy != null) {
             notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "senderBalance", Double.toString(economy.getBalance(Sender)));
-            transaction = takeMoney(Sender, Price);
+            transaction = Economy.takeMoney();
             successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "senderBalance", Double.toString(economy.getBalance(Sender)));
         }
         if(transaction) {
@@ -182,10 +182,5 @@ public class Chat implements CommandExecutor {
                 MessageSender.sendToChat(Sender, notEnoughMoney);
             }
         }
-    }
-
-    public static boolean takeMoney(Player p, double amount) {
-        if (economy.getBalance(p) < amount) return false;
-        return economy.withdrawPlayer(p, amount).transactionSuccess();
     }
 }

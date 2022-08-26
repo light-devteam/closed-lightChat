@@ -3,6 +3,7 @@ package ru.rtire.lightchat.chat.modules;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.rtire.lightchat.LightChat;
+import ru.rtire.lightchat.dependencies.Vault;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
@@ -32,8 +33,8 @@ public final class MessageFormatter {
     public String player(String str, Player p, String r) {
         str = unicode(str);
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            str = placeholderReplacement(str, r + "Prefix", unicode(plugin.chat.getPlayerPrefix(p)));
-            str = placeholderReplacement(str, r + "Suffix", unicode(plugin.chat.getPlayerSuffix(p)));
+            str = placeholderReplacement(str, r + "Prefix", unicode(Vault.chat.getPlayerPrefix(p)));
+            str = placeholderReplacement(str, r + "Suffix", unicode(Vault.chat.getPlayerSuffix(p)));
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             str = PlaceholderAPIReplace(str, p);
@@ -43,8 +44,8 @@ public final class MessageFormatter {
     public String player(String str, Player p, String r, boolean unicode) {
         if(!unicode) { return new MessageFormatter().player(str, p, r); }
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            str = placeholderReplacement(str, r + "Prefix", plugin.chat.getPlayerPrefix(p));
-            str = placeholderReplacement(str, r + "Suffix", plugin.chat.getPlayerSuffix(p));
+            str = placeholderReplacement(str, r + "Prefix", Vault.chat.getPlayerPrefix(p));
+            str = placeholderReplacement(str, r + "Suffix", Vault.chat.getPlayerSuffix(p));
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             str = PlaceholderAPIReplace(str, p);
