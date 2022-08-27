@@ -28,6 +28,8 @@ general:
     noOneHeard:
       display: 'hotbar'
       message: '&e{senderPrefix}&f{sender}&c, Вас никто не услышал... :('
+    cooldown:
+      display: 'hotbar'
 
 
 #  #=#=#=#=#=#=#=#=#=#
@@ -108,8 +110,12 @@ chats:
     #sender
     format: '&f&6G&f | &e{senderPrefix}&6{sender} &6> {message}'
     color: '&f'
-    cooldown: 0
-    price: 0
+    cooldown:
+      cooldown: '10s'
+      notCooledDown: '&cХей, &f{senderPrefix}&f{sender}&c! Полегче! Подожди еще &b{cdTime}&c, прежде чем отправить сообщение.'
+    economy:
+      price: 0
+      notEnoughMoney: '&f{senderPrefix}&f{sender}&c, у Вас недостаточно денег для отправки сообщения в Глобальный чат. Цена: &b{price}&c, Ваш баланс: &b{senderBalance}&c.'
     mentions: true
     commands: 'global g gl glb glob'
     # без json, только цвета
@@ -125,7 +131,5 @@ chats:
       format: '[G] {sender} >>> {message}'
     noPerms: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c!'
     noPermsCommand: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c при помощи &bкоманды&c!'
-    notCooledDown: '&cХей, &f{senderPrefix}&f{sender}&c! Полегче! Подожди еще &b{seconds}с&c, прежде чем отправить сообщение.'
     noPermsMention: '&c{sender}, у Вас нет прав на &bупоминание&c игроков в &bГлобальном чате&c!'
-    notEnoughMoney: '&f{senderPrefix}&f{sender}&c, у Вас недостаточно денег для отправки сообщения в Глобальный чат. Цена: &b{price}&c, Ваш баланс: &b{senderBalance}&c.'
     successfullyPaid: '&f{senderPrefix}&f{sender}&a, Вы успешно оплатили &b{price}&a за объявление. Ваш баланс: &b{senderBalance}&a.'

@@ -20,11 +20,11 @@ public class ChatListener implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         ChatEvent.setEvent(e);
         e.setCancelled(true);
-        eventCaller(e);
+        eventCaller();
     }
 
-    public void eventCaller(AsyncPlayerChatEvent e) {
-        new Chat().chatCaller(e);
+    public void eventCaller() {
+        new Chat().chatCaller();
     }
     public void eventCaller(String Message, String SenderNickname) {
         new Chat().chatCaller(Message, SenderNickname);

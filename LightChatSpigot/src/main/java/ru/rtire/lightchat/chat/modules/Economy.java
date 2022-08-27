@@ -15,10 +15,5 @@ public class Economy {
         economy = Vault.economy;
     }
 
-    public static boolean takeMoney() {
-        Player p = ChatEvent.getSender();
-        double amount = plugin.getConfig().getDouble(String.format("chats.%s.price", ChatEvent.getChat()));
-        if (economy.getBalance(p) < amount) return false;
-        return economy.withdrawPlayer(p, amount).transactionSuccess();
-    }
+
 }

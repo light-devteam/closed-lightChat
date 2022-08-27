@@ -14,35 +14,47 @@ import ru.rtire.lightchat.chat.modules.Mentions;
 import ru.rtire.lightchat.chat.modules.MessageFormatter;
 import ru.rtire.lightchat.chat.modules.MessageSender;
 import ru.rtire.lightchat.chat.modules.Logger;
-import ru.rtire.lightchat.chat.modules.Economy;
+import ru.rtire.lightchat.chat.modules.Cooldown;
 import ru.rtire.lightchat.api.ChatEvent;
 import ru.rtire.lightchat.dependencies.Vault;
 
 public class Chat implements CommandExecutor {
     private LightChat plugin;
     private String Chat;
-    private static net.milkbowl.vault.economy.Economy economy;
 
     public Chat () {
         this.plugin = LightChat.getInstance();
-        economy = Vault.economy;
     }
     public Chat (String Chat) {
         this.plugin = LightChat.getInstance();
         this.Chat = Chat;
-        economy = Vault.economy;
     }
 
-    public void chatCaller (AsyncPlayerChatEvent e) {
-        String Message = e.getMessage();
-        Player Sender = e.getPlayer();
+    public void chatCaller () {
+        String Message = ChatEvent.getMessage();
+        Player Sender = ChatEvent.getSender();
         String SenderNickname = Sender.getName();
         String Chat = ChatDefinition.definition();
         if (Sender != null) {
             if(Chat != null) {
-                String Prefix = plugin.getConfig().getString(String.format("chats.%s.prefix", Chat)).trim();
-                Message = Message.substring(Prefix.length(), Message.length());
-                sendingMessage(Message.trim(), Sender, SenderNickname, Chat);
+                MessageFormatter MessageFormatter = new MessageFormatter();
+                MessageSender MessageSender = new MessageSender();
+                String CooldownDisplay = plugin.getConfig().getString("general.chat.cooldown.display");
+                String notCooledDown = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.cooldown.notCooledDown", Chat)).trim(), Sender, "sender");
+                if(Cooldown.cooldown() <= 0) {
+                    String Prefix = plugin.getConfig().getString(String.format("chats.%s.prefix", Chat)).trim();
+                    Message = Message.substring(Prefix.length(), Message.length());
+                    sendingMessage(Message.trim(), Sender, SenderNickname, Chat);
+                } else {
+                    if (notCooledDown.length() > 0) {
+                        notCooledDown = MessageFormatter.placeholderReplacement(notCooledDown, "cdTime", Cooldown.cooldown().toString());
+                        if (CooldownDisplay.equalsIgnoreCase("hotbar")) {
+                            MessageSender.sendToHotbar(Sender, notCooledDown);
+                        } else if (CooldownDisplay.equalsIgnoreCase("chat")) {
+                            MessageSender.sendToChat(Sender, notCooledDown);
+                        }
+                    }
+                }
             } else {
                 MessageFormatter MessageFormatter = new MessageFormatter();
                 MessageSender MessageSender = new MessageSender();
@@ -57,6 +69,8 @@ public class Chat implements CommandExecutor {
                     }
                 }
             }
+        } else {
+            // ...
         }
     }
     public void chatCaller (String Message, String SenderNickname) {
@@ -84,6 +98,7 @@ public class Chat implements CommandExecutor {
             }
         } else {
             plugin.getLogger().warning("Unable to send message from console.");
+            // ...
         }
         return true;
     }
@@ -105,23 +120,21 @@ public class Chat implements CommandExecutor {
         Boolean fileLog = plugin.getConfig().getBoolean(String.format("chats.%s.fileLog.enable", Chat));
         Boolean consoleLog = plugin.getConfig().getBoolean(String.format("chats.%s.consoleLog.enable", Chat));
 
-        int Cooldown = plugin.getConfig().getInt(String.format("chats.%s.cooldown", Chat));
-        double Price = plugin.getConfig().getDouble(String.format("chats.%s.price", Chat));
+        double Price = plugin.getConfig().getDouble(String.format("chats.%s.economy.price", Chat));
 
         String noPerms = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPerms", Chat)).trim(), Sender, "sender");
-        String notCooledDown = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.notCooledDown", Chat)).trim(), Sender, "sender");
         String noPermsMention = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPermsMention", Chat)).trim(), Sender, "sender");
         String noPermsCommand = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPermsCommand", Chat)).trim(), Sender, "sender");
-        String notEnoughMoney = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.notEnoughMoney", Chat)).trim(), Sender, "sender");
+        String notEnoughMoney = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.economy.notEnoughMoney", Chat)).trim(), Sender, "sender");
             notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "price", Double.toString(Price));
         String successfullyPaid = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.successfullyPaid", Chat)).trim(), Sender, "sender");
             successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "price", Double.toString(Price));
 
         Boolean transaction = true;
-        if(this.economy != null) {
-            notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "senderBalance", Double.toString(economy.getBalance(Sender)));
-            transaction = Economy.takeMoney();
-            successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "senderBalance", Double.toString(economy.getBalance(Sender)));
+        if(Vault.economy != null) {
+            notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "senderBalance", Double.toString(Vault.economy.getBalance(Sender)));
+            transaction = Vault.takeMoney();
+            successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "senderBalance", Double.toString(Vault.economy.getBalance(Sender)));
         }
         if(transaction) {
             if(successfullyPaid.length() > 0 && Price > 0) {

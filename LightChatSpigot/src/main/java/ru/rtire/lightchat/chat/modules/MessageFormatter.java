@@ -2,10 +2,10 @@ package ru.rtire.lightchat.chat.modules;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
 import ru.rtire.lightchat.LightChat;
 import ru.rtire.lightchat.dependencies.Vault;
-
-import me.clip.placeholderapi.PlaceholderAPI;
+import ru.rtire.lightchat.dependencies.PlaceholderAPI;
 
 public final class MessageFormatter {
 
@@ -33,22 +33,24 @@ public final class MessageFormatter {
     public String player(String str, Player p, String r) {
         str = unicode(str);
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            str = placeholderReplacement(str, r + "Prefix", unicode(Vault.chat.getPlayerPrefix(p)));
-            str = placeholderReplacement(str, r + "Suffix", unicode(Vault.chat.getPlayerSuffix(p)));
+            Vault Vault = new Vault();
+            str = placeholderReplacement(str, r + "Prefix", unicode(Vault.getPlayerPrefix(p)));
+            str = placeholderReplacement(str, r + "Suffix", unicode(Vault.getPlayerSuffix(p)));
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            str = PlaceholderAPIReplace(str, p);
+            str = PlaceholderAPI(str, p);
         }
         return placeholderReplacement(str, r, p.getName());
     }
     public String player(String str, Player p, String r, boolean unicode) {
         if(!unicode) { return new MessageFormatter().player(str, p, r); }
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            str = placeholderReplacement(str, r + "Prefix", Vault.chat.getPlayerPrefix(p));
-            str = placeholderReplacement(str, r + "Suffix", Vault.chat.getPlayerSuffix(p));
+            Vault Vault = new Vault();
+            str = placeholderReplacement(str, r + "Prefix", Vault.getPlayerPrefix(p));
+            str = placeholderReplacement(str, r + "Suffix", Vault.getPlayerSuffix(p));
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            str = PlaceholderAPIReplace(str, p);
+            str = PlaceholderAPI(str, p);
         }
         return placeholderReplacement(str, r, p.getName());
     }
@@ -57,7 +59,7 @@ public final class MessageFormatter {
         return str.replace(this.Placeholder.replace("placeholder", Placeholder), replacement);
     }
 
-    public String PlaceholderAPIReplace(String str, Player p) {
+    public String PlaceholderAPI(String str, Player p) {
         return PlaceholderAPI.setPlaceholders(p, str);
     }
 }
