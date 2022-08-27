@@ -29,7 +29,8 @@ general:
       display: 'hotbar'
       message: '&e{senderPrefix}&f{sender}&c, Вас никто не услышал... :('
     cooldown:
-      display: 'hotbar'
+      general: '7s'
+      display: 'chat'
 
 
 #  #=#=#=#=#=#=#=#=#=#
