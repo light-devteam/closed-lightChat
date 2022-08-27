@@ -49,7 +49,7 @@ public final class ChatEvent {
     }
     public static void setMessage(String m) { Message = m; }
     public static void setSender(Player p) { Sender = p; }
-    public static void setSenderLocation() { Sender.getLocation(); }
+    public static void setSenderLocation() { SenderLocation = Sender.getLocation(); }
     public static void setChat() { if(Message != null) Chat = ChatDefinition.definition(); }
     public static void setRecipients() {
         ArrayList<Player> recipients = new ArrayList<Player>();
