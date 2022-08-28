@@ -44,7 +44,9 @@ public class Chat implements CommandExecutor {
                 if(Cooldown.cooldown() <= 0) {
                     String Prefix = plugin.getConfig().getString(String.format("chats.%s.prefix", Chat)).trim();
                     Message = Message.substring(Prefix.length(), Message.length());
-                    sendingMessage(Message.trim(), Sender, SenderNickname, Chat);
+                    if(Message.length() > 0) {
+                        sendingMessage(Message.trim(), Sender, SenderNickname, Chat);
+                    }
                 } else {
                     if (notCooledDown.length() > 0) {
                         notCooledDown = MessageFormatter.placeholderReplacement(notCooledDown, "cdTime", Cooldown.cooldown().toString());
@@ -84,12 +86,16 @@ public class Chat implements CommandExecutor {
                 if (args.length >= 1) {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < args.length; i++) sb.append(args[i]).append(" ");
-                    if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
                     String Message = sb.toString().trim();
                     Player PlayerSender = (Player) Sender;
-                    String SenderNickname = PlayerSender.getName();
 
-                    sendingMessage(Message.trim(), PlayerSender, SenderNickname, this.Chat);
+                    ChatEvent.setAll(null, Message, PlayerSender);
+
+                    String SenderNickname = ChatEvent.getSenderNickname();
+
+                    if(Message.length() > 0) {
+                        sendingMessage(Message.trim(), PlayerSender, SenderNickname, this.Chat);
+                    }
                 } else {
                     return false;
                 }
@@ -127,7 +133,7 @@ public class Chat implements CommandExecutor {
         String noPermsCommand = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.noPermsCommand", Chat)).trim(), Sender, "sender");
         String notEnoughMoney = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.economy.notEnoughMoney", Chat)).trim(), Sender, "sender");
             notEnoughMoney = MessageFormatter.placeholderReplacement(notEnoughMoney, "price", Double.toString(Price));
-        String successfullyPaid = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.successfullyPaid", Chat)).trim(), Sender, "sender");
+        String successfullyPaid = MessageFormatter.player(plugin.getConfig().getString(String.format("chats.%s.economy.successfullyPaid", Chat)).trim(), Sender, "sender");
             successfullyPaid = MessageFormatter.placeholderReplacement(successfullyPaid, "price", Double.toString(Price));
 
         Boolean transaction = true;

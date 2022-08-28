@@ -117,6 +117,7 @@ chats:
     economy:
       price: 0
       notEnoughMoney: '&f{senderPrefix}&f{sender}&c, у Вас недостаточно денег для отправки сообщения в Глобальный чат. Цена: &b{price}&c, Ваш баланс: &b{senderBalance}&c.'
+      successfullyPaid: '&f{senderPrefix}&f{sender}&a, Вы успешно оплатили &b{price}&a за объявление. Ваш баланс: &b{senderBalance}&a.'
     mentions: true
     commands: 'global g gl glb glob'
     # без json, только цвета
@@ -133,4 +134,12 @@ chats:
     noPerms: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c!'
     noPermsCommand: '&f{senderPrefix}&f{sender}&c, у Вас нет прав на отправку сообщений в &bГлобальный чат&c при помощи &bкоманды&c!'
     noPermsMention: '&c{sender}, у Вас нет прав на &bупоминание&c игроков в &bГлобальном чате&c!'
-    successfullyPaid: '&f{senderPrefix}&f{sender}&a, Вы успешно оплатили &b{price}&a за объявление. Ваш баланс: &b{senderBalance}&a.'
+
+automessage:
+  messages:
+    - '{5m} message1'
+    - 'message2'
+    - 'message3'
+  # mixed contract
+  mode: 'mixed'
+  delay: '3m'
