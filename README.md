@@ -1,5 +1,9 @@
 # lightChat - Simple, convenient and functional minecraft chat.
-
+### Поддержка завершена. Плагин не имеет смысла. Все, что здесь есть и что планировалось сделать, уже есть в Chatty и реализовано более эффективно. Спасибо.
+**Плюсом к этому у автора руки из жопы и он не знает Java**
+<br>
+### Если Вам все же интересно, то описание чуть ниже.
+<br><br><br><br><br><br><br><br><br><br>
 # Functional:
 **[`[1]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** Global Chat  
 **[`[2]`](https://github.com/rTiRe/lightChat/blob/main/README.md#globalchat-localchat-worldchat)** Local Chat  
